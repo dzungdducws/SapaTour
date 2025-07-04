@@ -52,7 +52,6 @@ export const CusItemMenu: React.FC<CusItemMenuProps> = ({
           lineHeight: 15,
           letterSpacing: 0,
           textAlign: 'center',
-          fontFamily: 'Plus Jakarta Sans',
           color: 'black',
         }}
       >

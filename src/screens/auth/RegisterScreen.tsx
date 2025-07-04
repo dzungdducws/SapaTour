@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 
 import { CusDropdown } from '../../components/CusDropdown';
+import { CusImagePicker } from '../../components/CusImagePicker';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -114,7 +114,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       >
         <View style={{ padding: 16, width: '100%', gap: 16 }}>
           <View style={{ gap: 8 }}>
-            <Text style={{ color: 'white' }}>Họ tên *</Text>
+            <Text style={{ color: 'white' }}>
+              Họ tên <Text>*</Text>
+            </Text>
             <TextInput
               placeholder="Nhập email hoặc số điện thoại"
               placeholderTextColor={'#919EAB'}
@@ -122,7 +124,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
-            <Text style={{ color: 'white' }}>Email *</Text>
+            <Text style={{ color: 'white' }}>
+              Email <Text>*</Text>
+            </Text>
             <TextInput
               placeholder="Nhập email hoặc số điện thoại"
               placeholderTextColor={'#919EAB'}
@@ -130,7 +134,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
-            <Text>Số điện thoại *</Text>
+            <Text>
+              Số điện thoại <Text>*</Text>
+            </Text>
             <TextInput
               placeholder="Nhập email hoặc số điện thoại"
               placeholderTextColor={'#919EAB'}
@@ -224,9 +230,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               </Text>
             </View>
           </View>
-          {!isEnabled && (
+          {isEnabled && (
             <View style={{ gap: 8 }}>
-              <Text>Giấy phép kinh doanh *</Text>
+              <Text>
+                Giấy phép kinh doanh <Text>*</Text>
+              </Text>
               <CusDropdown
                 items={businessLicenseList.map(item => ({
                   label: item.name,
@@ -251,9 +259,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               ></CusDropdown>
             </View>
           )}
-          {!isEnabled && (
+          {isEnabled && (
             <View style={{ gap: 8 }}>
-              <Text>Đối tượng đăng ký *</Text>
+              <Text>
+                Đối tượng đăng ký <Text style={{ color: 'red' }}>*</Text>
+              </Text>
               <CusDropdown
                 items={objectList.map(item => ({
                   label: item.name,
@@ -276,6 +286,30 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                   }
                 }}
               ></CusDropdown>
+            </View>
+          )}
+          {isEnabled && (
+            <View style={{ gap: 8 }}>
+              <Text>
+                Mặt trước CCCD/CMT <Text>*</Text>
+              </Text>
+              <CusImagePicker
+                placeholder="Tải ảnh mặt trước"
+                onChange={image => console.log(image)}
+                disabled={false}
+              />
+            </View>
+          )}
+          {isEnabled && (
+            <View style={{ gap: 8 }}>
+              <Text>
+                Mặt sau CCCD/CMT <Text>*</Text>
+              </Text>
+              <CusImagePicker
+                placeholder="Tải ảnh mặt sau"
+                onChange={image => console.log(image)}
+                disabled={false}
+              />
             </View>
           )}
           <View style={{ gap: 8 }}>

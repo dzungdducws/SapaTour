@@ -64,6 +64,10 @@ export const CardImageLocation: React.FC<CardImageLocationProps> = ({
         resizeMode="cover"
       />
 
+      <Text style={{ fontSize: 12, fontWeight: '500', color: '#111' }}>
+        {name}
+      </Text>
+
       <View
         style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}
       >
@@ -76,6 +80,7 @@ export const CardImageLocation: React.FC<CardImageLocationProps> = ({
             tintColor: '#637381',
           }}
         />
+
         <Text
           style={{
             fontSize: 10,
@@ -90,10 +95,6 @@ export const CardImageLocation: React.FC<CardImageLocationProps> = ({
           {location}
         </Text>
       </View>
-
-      <Text style={{ fontSize: 12, fontWeight: '500', color: '#111' }}>
-        {name}
-      </Text>
 
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         {renderStars(rating)}

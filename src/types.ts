@@ -1,14 +1,24 @@
 export type RootStackParamList = {
-  Login:any;
-  ForgotPassword:any;
-  Register:any;
+  Login: any;
+  ForgotPassword: any;
+  Register: any;
   Home: any;
 
-
-  Profile: { name: string };
-  One: any;
-  Two: any;
-  Three: any;
+  Profile: { id: string };
+  Map: any;
+  Trip: any;
+  Menu: any;
   Four: any;
 
+  RouteInMenu: any;
+  HeartInMenu: any;
+  OrderInMenu: any;
+  PromotionInMenu: any;
+  WeatherInMenu: any;
+  SupportInMenu: any;
+  ContactInMenu: any;
+  SuggestInMenu: any;
+  LanguageInMenu: any;
+  ShareInMenu: any;
+  DeleteAccountInMenu: any;
 };

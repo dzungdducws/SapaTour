@@ -1,3 +1,4 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import {
   View,
@@ -7,14 +8,19 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import { RootStackParamList } from '../types';
 
 const screenWidth = Dimensions.get('window').width;
 
-export const FooterMenu = () => {
-  const [selected, setSelected] = useState<'home' | 'map' | 'trip' | 'menu'>(
-    'home',
-  );
+type FooterMenuProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+  selected: string;
+};
 
+export const FooterMenu: React.FC<FooterMenuProps> = ({
+  navigation,
+  selected,
+}) => {
   const homeIcon = require('../../assets/img/icon/home.png');
   const mapIcon = require('../../assets/img/icon/map-trifold.png');
   const logoMain = require('../../assets/img/Logo-Main.png');
@@ -25,13 +31,17 @@ export const FooterMenu = () => {
     <View style={styles.container}>
       <View style={styles.tabBar}>
         <TabItem
-          onPress={() => setSelected('home')}
+          onPress={() => {
+            navigation.navigate('Home');
+          }}
           icon={homeIcon}
           label="Trang chủ"
           isSeletcted={selected === 'home'}
         />
         <TabItem
-          onPress={() => setSelected('map')}
+          onPress={() => {
+            navigation.navigate('Map');
+          }}
           icon={mapIcon}
           label="Bản đồ"
           isSeletcted={selected === 'map'}
@@ -40,13 +50,17 @@ export const FooterMenu = () => {
         <View style={{ width: 70 }} />
 
         <TabItem
-          onPress={() => setSelected('trip')}
+          onPress={() => {
+            navigation.navigate('Trip');
+          }}
           icon={tripIcon}
           label="Chuyến đi"
           isSeletcted={selected === 'trip'}
         />
         <TabItem
-          onPress={() => setSelected('menu')}
+          onPress={() => {
+            navigation.navigate('Menu');
+          }}
           icon={menuIcon}
           label="Menu"
           isSeletcted={selected === 'menu'}

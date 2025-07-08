@@ -1,0 +1,99 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import { RootStackParamList } from '../types';
+import { useUser } from '../hooks/useUser';
+
+type HeaderProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+  isLogin?: boolean;
+};
+
+export const Header: React.FC<HeaderProps> = ({ navigation }) => {
+  const { logout } = useUser();
+
+  const icon_search = require('../../assets/img/icon/icon-search.png');
+  const icon_cart = require('../../assets/img/icon/Cart.png');
+  const icon_noti = require('../../assets/img/icon/Noti.png');
+  const bg_header = require('../../assets/img/bg/bg_header.png');
+
+  return (
+    <ImageBackground source={bg_header} style={styles.container}>
+      <View style={styles.searchContainer}>
+        <Image source={icon_search} style={styles.iconSearch} />
+        <TextInput
+          placeholder="Tìm kiếm trên SaPa Tour"
+          placeholderTextColor="#919EAB"
+          style={styles.inputText}
+        />
+      </View>
+      <View style={styles.rightIcons}>
+        <TouchableOpacity style={styles.iconButton}>
+          <Image source={icon_cart} style={styles.iconImage} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={() => {
+            if (logout) {
+              logout();
+            }
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          }}
+        >
+          <Image source={icon_noti} style={styles.iconImage} />
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
+  );
+};
+
+export const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    paddingTop: 32,
+  },
+  searchContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    height: 40,
+    marginRight: 24,
+  },
+  iconSearch: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+  inputText: {
+    flex: 1,
+    color: '#000',
+  },
+  rightIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconButton: {
+    marginLeft: 12,
+  },
+  iconImage: {
+    width: 24,
+    height: 24,
+  },
+});

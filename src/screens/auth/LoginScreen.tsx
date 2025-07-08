@@ -13,6 +13,7 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import { RootStackParamList } from '../../types';
+import { useUser } from '../../hooks/useUser';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -29,6 +30,10 @@ const iconEyeOff = require('../../../assets/img/icon/icon-eye-off.png');
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [imageHeight, setImageHeight] = useState(200);
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const { user, login } = useUser();
 
   useEffect(() => {
     let { uri: uri_1 } = Image.resolveAssetSource(imageSource_1);
@@ -63,6 +68,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               placeholder="Nhập email hoặc số điện thoại"
               placeholderTextColor={'#919EAB'}
               style={styles.input}
+              value={email}
+              onChangeText={text => setEmail(text)}
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
@@ -79,7 +86,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 placeholder="Nhập mật khẩu"
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showPassword}
-                style={{ flex: 1, height: 40 }}
+                style={{ flex: 1, height: 40, color: 'black' }}
+                value={password}
+                onChangeText={text => setPassword(text)}
               />
 
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -109,7 +118,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </Text>
         </View>
 
-        <TouchableOpacity onPress={() => {}} activeOpacity={0.8}>
+        <TouchableOpacity
+          onPress={() => {
+            if (email && password && login) {
+              login(email, password), navigation.navigate('Home');
+            }
+          }}
+          activeOpacity={0.8}
+        >
           <LinearGradient
             colors={['#80B941', '#65A438', '#4A9341']} // tùy chỉnh màu gradient
             start={{ x: 0, y: 0 }}
@@ -132,13 +148,26 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               Đăng ký
             </Text>
           </Text>
-          <Text style={styles.label} onPress={() => {navigation.navigate('Home')}}>Bỏ qua</Text>
+          <Text
+            style={styles.label}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
+          >
+            Bỏ qua
+          </Text>
         </View>
       </View>
       <Image
         source={imageSource_3}
-        style={{ position: 'absolute', bottom: 0, left: 0 }}
-        resizeMode="cover"
+        style={{
+          width: screenWidth,
+          aspectRatio: 3,
+          position: 'absolute',
+          bottom: -screenWidth / 3,
+          left: 0,
+        }}
+        resizeMode="contain"
       />
     </View>
   );
@@ -177,7 +206,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderRadius: 8,
-    
+    color: 'black',
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#F4F6F8',

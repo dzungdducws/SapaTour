@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Text,
   View,
@@ -20,6 +20,8 @@ import { ImageLocation } from '../components/ImageLocation';
 import { CardImageLocation } from '../components/CardImageLocation';
 import { CardImageHotel } from '../components/CardImageHotel';
 import { FooterMenu } from '../components/FooterMenu';
+import { transformer } from '../../metro.config';
+import { Header } from '../components/Header';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -162,26 +164,40 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
     extrapolate: 'clamp',
   });
+  const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+    const listenerId = scrollY.addListener(({ value }) => {
+      const threshold = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+      setShowSearch(value >= threshold);
+    });
+
+    return () => scrollY.removeListener(listenerId);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Animated.View
         style={[
-          styles.header,
+          !showSearch && styles.header,
           {
             height: headerHeight,
+            zIndex: 5,
           },
         ]}
       >
-        <ImageBackground
-          source={require('../../assets/img/bg/bg_home.png')}
-          style={styles.headerBackground}
-          resizeMode="cover"
-        />
+        {!showSearch && (
+          <ImageBackground
+            source={require('../../assets/img/bg/bg_home.png')}
+            style={styles.headerBackground}
+            resizeMode="cover"
+          />
+        )}
+        {showSearch && <Header navigation={navigation}></Header>}
       </Animated.View>
 
       <Animated.ScrollView
-        style={{ zIndex: 10 }}
+        style={{ zIndex: showSearch ? 4 : 6 }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
         onScroll={Animated.event(
@@ -189,7 +205,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           { useNativeDriver: false },
         )}
         scrollEventThrottle={16}
-        stickyHeaderIndices={[1]}
       >
         <View style={[styles.section, { marginTop: 28, marginBottom: 0 }]}>
           <View
@@ -264,22 +279,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View style={styles.section}>
-          <View style={styles.input}>
-            <Image source={icon_search} style={{ width: 24, height: 24 }} />
-            <TextInput
-              placeholder="Tìm kiếm trên SaPa Tour"
-              placeholderTextColor="#919EAB"
-              style={{ flex: 1, height: 40 }}
-            />
+        {!showSearch && (
+          <View
+            style={[
+              styles.section,
+              {
+                paddingVertical: 8,
+              },
+            ]}
+          >
+            <View style={styles.input}>
+              <Image source={icon_search} style={{ width: 24, height: 24 }} />
+              <TextInput
+                placeholder="Tìm kiếm trên SaPa Tour"
+                placeholderTextColor="#919EAB"
+                style={{ flex: 1, height: 40 }}
+              />
+            </View>
           </View>
-        </View>
+        )}
 
         <View style={styles.section}>
           <Image
             source={banner1}
             style={{
               width: screenWidth - 32,
+              height: (screenWidth / 3) * 2,
               borderRadius: 8,
             }}
             resizeMode="contain"
@@ -364,8 +389,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <View style={styles.section}>
           <Image
             source={banner2}
-            style={{ width: screenWidth - 32, borderRadius: 8 }}
-            resizeMode="cover"
+            style={{
+              width: screenWidth - 32,
+              height: screenWidth / 2,
+              borderRadius: 8,
+            }}
+            resizeMode="contain"
           />
         </View>
 
@@ -627,11 +656,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             ))}
           </ScrollView>
         </View>
-
-        <View style={{ height: 80 }} />
+        <View style={{ height: 144 }} />
       </Animated.ScrollView>
 
-      <FooterMenu />
+      <FooterMenu navigation={navigation} selected={'home'} />
     </View>
   );
 };

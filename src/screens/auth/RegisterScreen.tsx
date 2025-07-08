@@ -157,7 +157,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 placeholder="Nhập mật khẩu"
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showPassword}
-                style={{ flex: 1, height: 40 }}
+                style={{ flex: 1, height: 40, color: 'black' }}
               />
 
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
@@ -182,7 +182,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 placeholder="Nhập lại mật khẩu"
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showRePassword}
-                style={{ flex: 1, height: 40 }}
+                style={{ flex: 1, height: 40, color: 'black' }}
               />
 
               <TouchableOpacity
@@ -414,6 +414,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#F4F6F8',
+    color: 'black',
   },
 
   textForgetPass: {

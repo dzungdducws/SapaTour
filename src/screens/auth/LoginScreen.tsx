@@ -151,7 +151,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           <Text
             style={styles.label}
             onPress={() => {
-              navigation.navigate('Home');
+              navigation.navigate('Trip');
             }}
           >
             Bỏ qua

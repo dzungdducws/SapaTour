@@ -30,6 +30,7 @@ const AppNavigator = () => {
       <Stack.Screen name="Map" component={MapScreen} />
       <Stack.Screen name="Trip" component={TripScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
 
       <Stack.Screen name="RouteInMenu" component={DetailInMenu} />
       <Stack.Screen name="HeartInMenu" component={DetailInMenu} />

@@ -4,7 +4,7 @@ export type RootStackParamList = {
   Register: any;
   Home: any;
 
-  Profile: { id: string };
+  Profile: any;
   Map: any;
   Trip: any;
   Menu: any;

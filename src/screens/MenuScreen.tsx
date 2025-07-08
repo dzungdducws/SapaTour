@@ -116,9 +116,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
         {user && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Profile', {
-                id: _user.id.toString(),
-              });
+              navigation.navigate('Profile');
             }}
           >
             <View

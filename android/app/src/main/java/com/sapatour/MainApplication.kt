@@ -1,4 +1,4 @@
-package com.sapatour
+package com.ST
 
 import android.app.Application
 import com.facebook.react.PackageList

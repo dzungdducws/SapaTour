@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "SapaTour",
+      withModuleName: "ST",
       in: window,
       launchOptions: launchOptions
     )

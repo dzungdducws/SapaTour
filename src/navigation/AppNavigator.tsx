@@ -8,6 +8,7 @@ import TripScreen from '../screens/TripScreen';
 import MenuScreen from '../screens/MenuScreen';
 import MapScreen from '../screens/MapScreen';
 import DetailInMenu from '../screens/DetailInMenu.tsx';
+import DetailInfoHotelBookingScreen from '../screens/DetailInfoHotelBookingScreen.tsx';
 
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
@@ -31,6 +32,10 @@ const AppNavigator = () => {
       <Stack.Screen name="Trip" component={TripScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen
+        name="DetailInfoHotelBooking"
+        component={DetailInfoHotelBookingScreen}
+      />
 
       <Stack.Screen name="RouteInMenu" component={DetailInMenu} />
       <Stack.Screen name="HeartInMenu" component={DetailInMenu} />

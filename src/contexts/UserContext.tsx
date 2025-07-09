@@ -3,6 +3,7 @@ import { createContext, useState } from 'react';
 type User = {
   name: string;
   email: string;
+  password: string;
   avatar?: string;
 };
 
@@ -28,6 +29,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     setUser({
       name: email,
+      password: pass,
       email,
     });
   };

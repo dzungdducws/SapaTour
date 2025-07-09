@@ -59,7 +59,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       <View style={{ flex: 1, marginTop: 60, alignItems: 'center' }}>
         <View style={{ gap: 10 }}>
           <Image source={imageSource_2} style={{ width: 75, height: 75 }} />
-          <Text style={styles.nameApp}>SapaTour</Text>
+          <Text style={styles.nameApp}>Sapa Tour</Text>
         </View>
         <View style={{ padding: 16, width: '100%', gap: 16 }}>
           <View style={{ gap: 8 }}>

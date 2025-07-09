@@ -1,20 +1,30 @@
+import { BookingHotelModel } from './models/BookingHotelModel';
+import { BookingRestaurantModel } from './models/BookingRestaurantModel';
+
 const type = {
   '1': 'Địa điểm lưu trú',
   '2': 'Địa điểm ẩm thực',
 };
 
-const sttBooking = {
-  '1': 'Chờ xác nhận',
-  '2': 'Đã xác nhận',
-  '3': 'Đã hủy',
+export const sttBooking: {
+  [key: string]: { text: string; color: string; bgcolor: string };
+} = {
+  '1': { text: 'Chờ xác nhận', color: '#FFBF00', bgcolor: '#FFF7CD' },
+  '2': { text: 'Đã xác nhận', color: '#2CD9C5', bgcolor: '#D5F6E8' },
+  '3': { text: 'Đã cọc', color: '#826AF9', bgcolor: '#FBEBFF' },
+  '4': { text: 'Đã nhận phòng', color: '#4A98E2', bgcolor: '#D0F2FF' },
+  '4.1': { text: 'Đã nhận bàn', color: '#4A98E2', bgcolor: '#D0F2FF' },
+  '5': { text: 'Đã thanh toán', color: '#54D62C', bgcolor: '#E9FCD4' },
+  '6': { text: 'Đã hủy', color: '#FF4842', bgcolor: '#FFE7D9' },
 };
-
-const list = {
+export const list: {
+  [key: string]: (BookingHotelModel | BookingRestaurantModel)[];
+} = {
   '1': [
     {
       type: '1',
-      idBooking: '100144',
-      status: '2',
+      idBooking: '100100',
+      status: '1',
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
@@ -22,15 +32,27 @@ const list = {
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
-        dayStart: '2021-01-01',
-        dayEnd: '2021-01-05',
+        dayStart: '2025-07-10',
+        dayEnd: '2025-07-12',
         address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
         rooms: [
           {
             name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
             price: 1000000,
             theNumOfRoom: 1,
-            image: '',
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
           },
         ],
         services: [
@@ -50,15 +72,13 @@ const list = {
         totalDiscount: 100000,
         totalPrice: 1000000,
       },
-      timeUpdateStt1: '2021-01-01 00:00:00',
-      timeUpdateStt2: '2021-01-01 00:00:00',
-      timeUpdateStt3: '2021-01-01 00:00:00',
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
     },
-  ],
-  '2': [
     {
       type: '1',
-      idBooking: '100144',
+      idBooking: '100101',
       status: '2',
       userInfo: {
         name: 'Nam Nguyễn',
@@ -66,8 +86,261 @@ const list = {
         note: 'Chuyển bị ghế cho em bé',
       },
       placeInfo: {
+        name: 'Hotel de la Coupole - MGallery by Sofitel',
+        dayStart: '2025-07-11',
+        dayEnd: '2025-07-13',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        rooms: [
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+        ],
+        services: [
+          {
+            name: 'Giặt là',
+            price: 100000,
+            quantity: 1,
+          },
+        ],
+        totalPriceRoom: 1000000,
+        totalPriceService: 100000,
+        totalDiscount: 100000,
+        totalPrice: 1000000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '1',
+      idBooking: '100102',
+      status: '3',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Hotel de la Coupole - MGallery by Sofitel',
+        dayStart: '2025-07-12',
+        dayEnd: '2025-07-14',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        rooms: [
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+        ],
+        services: [
+          {
+            name: 'Giặt là',
+            price: 100000,
+            quantity: 1,
+          },
+        ],
+        totalPriceRoom: 1000000,
+        totalPriceService: 100000,
+        totalDiscount: 100000,
+        totalPrice: 1000000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '1',
+      idBooking: '100103',
+      status: '4',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Hotel de la Coupole - MGallery by Sofitel',
+        dayStart: '2025-07-13',
+        dayEnd: '2025-07-15',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        rooms: [
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+        ],
+        services: [
+          {
+            name: 'Giặt là',
+            price: 100000,
+            quantity: 1,
+          },
+        ],
+        totalPriceRoom: 1000000,
+        totalPriceService: 100000,
+        totalDiscount: 100000,
+        totalPrice: 1000000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '1',
+      idBooking: '100103',
+      status: '5',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Hotel de la Coupole - MGallery by Sofitel',
+        dayStart: '2025-07-13',
+        dayEnd: '2025-07-15',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        rooms: [
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+        ],
+        services: [
+          {
+            name: 'Giặt là',
+            price: 100000,
+            quantity: 1,
+          },
+        ],
+        totalPriceRoom: 1000000,
+        totalPriceService: 100000,
+        totalDiscount: 100000,
+        totalPrice: 1000000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '1',
+      idBooking: '100103',
+      status: '6',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Hotel de la Coupole - MGallery by Sofitel',
+        dayStart: '2025-07-13',
+        dayEnd: '2025-07-15',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        rooms: [
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+          {
+            name: 'Phòng Deluxe có giường đôi cỡ lớn cho 2 người',
+            price: 1000000,
+            theNumOfRoom: 1,
+            image: require('../assets/img/hotel/deluxe.png'),
+          },
+        ],
+        services: [
+          {
+            name: 'Giặt là',
+            price: 100000,
+            quantity: 1,
+          },
+        ],
+        totalPriceRoom: 1000000,
+        totalPriceService: 100000,
+        totalDiscount: 100000,
+        totalPrice: 1000000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+  ],
+  '2': [
+    {
+      type: '2',
+      idBooking: '200100',
+      status: '1',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',
-        dayStart: '2021-01-01',
+        image: require('../assets/img/hotel/doquyen.png'),
+        dayStart: '2025-07-10',
         timeStart: '10:00',
         address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
         numberOfPeople: 2,
@@ -85,21 +358,180 @@ const list = {
           {
             name: 'Gà quay lá mắc mật nguyên con 3 cân',
             price: 100000,
-            quantity: 1,
-          },
-          {
-            name: 'Gà quay lá mắc mật nguyên con 3 cân',
-            price: 100000,
-            quantity: 2,
+            quantity: 3,
           },
         ],
         totalBill: 500000,
         totalDiscount: 100000,
         totalPrice: 400000,
       },
-      timeUpdateStt1: '2021-01-01 00:00:00',
-      timeUpdateStt2: '2021-01-01 00:00:00',
-      timeUpdateStt3: '2021-01-01 00:00:00',
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '2',
+      idBooking: '200101',
+      status: '2',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Nhà hàng Đỗ Quyên',
+        image: require('../assets/img/hotel/doquyen.png'),
+        dayStart: '2025-07-11',
+        timeStart: '10:00',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        numberOfPeople: 2,
+        bill: [
+          {
+            name: 'Vịt ôm chuối đậu',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà hầm thuốc bắc',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà quay lá mắc mật nguyên con 3 cân',
+            price: 100000,
+            quantity: 3,
+          },
+        ],
+        totalBill: 500000,
+        totalDiscount: 100000,
+        totalPrice: 400000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '2',
+      idBooking: '200102',
+      status: '4.1',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Nhà hàng Đỗ Quyên',
+        image: require('../assets/img/hotel/doquyen.png'),
+        dayStart: '2025-07-12',
+        timeStart: '10:00',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        numberOfPeople: 2,
+        bill: [
+          {
+            name: 'Vịt ôm chuối đậu',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà hầm thuốc bắc',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà quay lá mắc mật nguyên con 3 cân',
+            price: 100000,
+            quantity: 3,
+          },
+        ],
+        totalBill: 500000,
+        totalDiscount: 100000,
+        totalPrice: 400000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '2',
+      idBooking: '200103',
+      status: '5',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Nhà hàng Đỗ Quyên',
+        image: require('../assets/img/hotel/doquyen.png'),
+        dayStart: '2025-07-13',
+        timeStart: '10:00',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        numberOfPeople: 2,
+        bill: [
+          {
+            name: 'Vịt ôm chuối đậu',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà hầm thuốc bắc',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà quay lá mắc mật nguyên con 3 cân',
+            price: 100000,
+            quantity: 3,
+          },
+        ],
+        totalBill: 500000,
+        totalDiscount: 100000,
+        totalPrice: 400000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
+    },
+    {
+      type: '2',
+      idBooking: '200103',
+      status: '6',
+      userInfo: {
+        name: 'Nam Nguyễn',
+        phone: '0123456789',
+        note: 'Chuyển bị ghế cho em bé',
+      },
+      placeInfo: {
+        name: 'Nhà hàng Đỗ Quyên',
+        image: require('../assets/img/hotel/doquyen.png'),
+        dayStart: '2025-07-13',
+        timeStart: '10:00',
+        address: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
+        numberOfPeople: 2,
+        bill: [
+          {
+            name: 'Vịt ôm chuối đậu',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà hầm thuốc bắc',
+            price: 100000,
+            quantity: 1,
+          },
+          {
+            name: 'Gà quay lá mắc mật nguyên con 3 cân',
+            price: 100000,
+            quantity: 3,
+          },
+        ],
+        totalBill: 500000,
+        totalDiscount: 100000,
+        totalPrice: 400000,
+      },
+      timeUpdateStt1: '2025-07-09 09:37:17',
+      timeUpdateStt2: '2025-07-09 10:37:17',
+      timeUpdateStt3: '2025-07-09 11:37:17',
     },
   ],
 };

@@ -105,6 +105,7 @@ export const BookingHotelInList: React.FC<Props> = ({
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('DetailInfoHotelBooking', {
+              navigation,
               item,
             })
           }
@@ -149,9 +150,9 @@ export const BookingHotelInList: React.FC<Props> = ({
 
         <View
           style={{
-            paddingVertical: 2,
-            paddingHorizontal: 8,
-            borderRadius: 50,
+            paddingVertical: 4,
+            paddingHorizontal: 16,
+            borderRadius: 8,
             backgroundColor: '#919EAB29',
             alignItems: 'center',
             justifyContent: 'center',
@@ -201,6 +202,7 @@ export const BookingHotelInList: React.FC<Props> = ({
               style={{
                 flex: 1,
                 flexShrink: 1,
+                justifyContent: 'space-between',
               }}
             >
               <Text

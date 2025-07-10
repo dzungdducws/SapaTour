@@ -1,3 +1,6 @@
+import { BookingHotelModel } from './models/BookingHotelModel';
+import { BookingRestaurantModel } from './models/BookingRestaurantModel';
+
 export type RootStackParamList = {
   Login: any;
   ForgotPassword: any;
@@ -10,7 +13,8 @@ export type RootStackParamList = {
   Menu: any;
   Four: any;
 
-  DetailInfoHotelBooking: any;
+  DetailInfoHotelBooking: { navigation: any; item: BookingHotelModel };
+  DetailInfoRestaurantBooking: { navigation: any; item: BookingRestaurantModel };
 
   RouteInMenu: any;
   HeartInMenu: any;

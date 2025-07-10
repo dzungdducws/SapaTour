@@ -357,7 +357,9 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
                       style={{
                         backgroundColor: value.colorBg,
                         paddingHorizontal: 32,
-                        paddingVertical: 8,
+                        height: 50,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <Image
@@ -365,17 +367,25 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
                         style={{ width: 32, height: 32 }}
                       ></Image>
                     </View>
-                    <Text
+                    <View
                       style={{
-                        fontWeight: 400,
-                        fontSize: 12,
-                        lineHeight: 18,
-                        textAlign: 'center',
+                        height: 50,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
-                      numberOfLines={2}
                     >
-                      {value.text}
-                    </Text>
+                      <Text
+                        style={{
+                          fontWeight: 400,
+                          fontSize: 12,
+                          lineHeight: 18,
+                          textAlign: 'center',
+                        }}
+                        numberOfLines={2}
+                      >
+                        {value.text}
+                      </Text>
+                    </View>
                   </View>
                 ))}
               </View>
@@ -404,6 +414,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
                       />
                     ) : (
                       <BookingRestaurantInList
+                        navigation={navigation}
                         key={_index}
                         item={item as BookingRestaurantModel}
                       />

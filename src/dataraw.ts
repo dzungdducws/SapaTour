@@ -7,15 +7,71 @@ const type = {
 };
 
 export const sttBooking: {
-  [key: string]: { text: string; color: string; bgcolor: string };
+  [key: string]: {
+    text: string;
+    color: string;
+    bgcolor: string;
+    desc: string[];
+  };
 } = {
-  '1': { text: 'Chờ xác nhận', color: '#FFBF00', bgcolor: '#FFF7CD' },
-  '2': { text: 'Đã xác nhận', color: '#2CD9C5', bgcolor: '#D5F6E8' },
-  '3': { text: 'Đã cọc', color: '#826AF9', bgcolor: '#FBEBFF' },
-  '4': { text: 'Đã nhận phòng', color: '#4A98E2', bgcolor: '#D0F2FF' },
-  '4.1': { text: 'Đã nhận bàn', color: '#4A98E2', bgcolor: '#D0F2FF' },
-  '5': { text: 'Đã thanh toán', color: '#54D62C', bgcolor: '#E9FCD4' },
-  '6': { text: 'Đã hủy', color: '#FF4842', bgcolor: '#FFE7D9' },
+  '1': {
+    text: 'Chờ xác nhận',
+    color: '#FFBF00',
+    bgcolor: '#FFF7CD',
+    desc: [
+      'Đơn đặt phòng của bạn đang chờ xác nhận. Chúng tôi sẽ thông báo cho bạn ngay khi có phản hồi từ cơ sở lưu trú.',
+      'Đơn đặt bàn của bạn đang chờ xác nhận. Chúng tôi sẽ thông báo cho bạn ngay khi có phản hồi từ cơ sở ẩm thực.',
+    ],
+  },
+  '2': {
+    text: 'Đã xác nhận',
+    color: '#2CD9C5',
+    bgcolor: '#D5F6E8',
+    desc: [
+      'Đơn đặt phòng của bạn đã được xác nhận. Vui lòng đến check-in đúng ngày để đảm bảo phòng luôn sẵn sàng cho bạn.',
+      'Đơn đặt bàn của bạn đã được xác nhận. Vui lòng đến đúng giờ để đảm bảo bàn luôn sẵn sàng cho bạn.',
+    ],
+  },
+  '3': {
+    text: 'Đã cọc',
+    color: '#826AF9',
+    bgcolor: '#FBEBFF',
+    desc: [
+      'Địa điểm lưu trú đã nhận được tiền cọc của bạn. Vui lòng đến check-in đúng ngày để đảm bảo phòng luôn sẵn sàng cho bạn.',
+    ],
+  },
+  '4': {
+    text: 'Đã nhận phòng',
+    color: '#4A98E2',
+    bgcolor: '#D0F2FF',
+    desc: [
+      'Bạn đã nhận phòng thành công. Chúc bạn có một kỳ nghỉ thật tuyệt vời! Nếu cần hỗ trợ, hãy liên hệ lễ tân ngay nhé.',
+    ],
+  },
+  '4.1': {
+    text: 'Đã nhận bàn',
+    color: '#4A98E2',
+    bgcolor: '#D0F2FF',
+    desc: [
+      '',
+      'Bạn đã nhận bàn thành công. Chúc bạn có một bữa ăn ngon miệng! Nếu cần hỗ trợ, vui lòng liên hệ nhân viên phục vụ.',
+    ],
+  },
+  '5': {
+    text: 'Đã thanh toán',
+    color: '#54D62C',
+    bgcolor: '#E9FCD4',
+    desc: [
+      'Bạn cảm thấy thế nào về trải nghiệm tại cơ sở lưu trú này? Hãy chia sẻ cảm nhận với SaPa Tour nhé!',
+      'Bạn cảm thấy thế nào về trải nghiệm tại cơ sở ẩm thực này? Hãy chia sẻ cảm nhận với SaPa Tour nhé!',
+    ],
+  },
+  '6': {
+    text: 'Đã hủy',
+    color: '#FF4842',
+    bgcolor: '#FFE7D9',
+    desc: ['Đã huỷ đặt phòng vào', 'Đã huỷ đặt bàn vào'],
+  },
 };
 export const list: {
   [key: string]: (BookingHotelModel | BookingRestaurantModel)[];
@@ -28,7 +84,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -55,18 +111,7 @@ export const list: {
             image: require('../assets/img/hotel/deluxe.png'),
           },
         ],
-        services: [
-          {
-            name: 'Giặt là',
-            price: 100000,
-            quantity: 1,
-          },
-          {
-            name: 'Nước lọc',
-            price: 100000,
-            quantity: 1,
-          },
-        ],
+
         totalPriceRoom: 1000000,
         totalPriceService: 100000,
         totalDiscount: 100000,
@@ -83,7 +128,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -110,13 +155,7 @@ export const list: {
             image: require('../assets/img/hotel/deluxe.png'),
           },
         ],
-        services: [
-          {
-            name: 'Giặt là',
-            price: 100000,
-            quantity: 1,
-          },
-        ],
+        services: [],
         totalPriceRoom: 1000000,
         totalPriceService: 100000,
         totalDiscount: 100000,
@@ -133,7 +172,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -183,7 +222,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -233,7 +272,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -283,7 +322,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Hotel de la Coupole - MGallery by Sofitel',
@@ -335,7 +374,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',
@@ -376,7 +415,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',
@@ -417,7 +456,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',
@@ -458,7 +497,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',
@@ -499,7 +538,7 @@ export const list: {
       userInfo: {
         name: 'Nam Nguyễn',
         phone: '0123456789',
-        note: 'Chuyển bị ghế cho em bé',
+        note: 'Chuẩn bị ghế cho em bé',
       },
       placeInfo: {
         name: 'Nhà hàng Đỗ Quyên',

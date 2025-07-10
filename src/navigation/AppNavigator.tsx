@@ -9,6 +9,7 @@ import MenuScreen from '../screens/MenuScreen';
 import MapScreen from '../screens/MapScreen';
 import DetailInMenu from '../screens/DetailInMenu.tsx';
 import DetailInfoHotelBookingScreen from '../screens/DetailInfoHotelBookingScreen.tsx';
+import DetailInfoRestaurantBookingScreen from '../screens/DetailInfoRestaurantBookingScreen.tsx';
 
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
@@ -35,6 +36,10 @@ const AppNavigator = () => {
       <Stack.Screen
         name="DetailInfoHotelBooking"
         component={DetailInfoHotelBookingScreen}
+      />
+      <Stack.Screen
+        name="DetailInfoRestaurantBooking"
+        component={DetailInfoRestaurantBookingScreen}
       />
 
       <Stack.Screen name="RouteInMenu" component={DetailInMenu} />

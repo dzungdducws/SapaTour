@@ -21,7 +21,7 @@ export interface PlaceInfoHotelModel {
   services?: ServiceHotelModel[];
   totalPriceRoom: number;
   totalPriceService?: number;
-  totalDiscount: number;
+  totalDiscount?: number;
   totalPrice?: number;
 }
 

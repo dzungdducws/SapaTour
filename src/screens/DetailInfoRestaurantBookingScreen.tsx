@@ -18,41 +18,29 @@ import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
 
-type DetailInfoHotelBookingProps = {
+type DetailInfoRestaurantBookingProps = {
   navigation: NativeStackNavigationProp<
     RootStackParamList,
-    'DetailInfoHotelBooking'
+    'DetailInfoRestaurantBooking'
   >;
-  route: RouteProp<RootStackParamList, 'DetailInfoHotelBooking'>;
+  route: RouteProp<RootStackParamList, 'DetailInfoRestaurantBooking'>;
 };
 
-const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
-  navigation,
-  route,
-}) => {
+const DetailInfoRestaurantBookingScreen: React.FC<
+  DetailInfoRestaurantBookingProps
+> = ({ navigation, route }) => {
   const item = route.params?.item;
   const { userInfo, placeInfo } = item;
 
   const [visible, setVisible] = useState(false);
-  // console.log(.length );
 
-  const servicesTable = placeInfo.services?.map(value => {
+  const billTable = placeInfo.bill?.map(value => {
     return {
       label: value.name,
       quantity: value.quantity,
       price: value.price,
     };
   });
-
-  const diffDate = (): number => {
-    const s = new Date(placeInfo.dayStart);
-    const e = new Date(placeInfo.dayEnd);
-
-    const diffTime = Math.abs(e.getTime() - s.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    return diffDays;
-  };
 
   const formatVNDate = (dateStr: string) => {
     const [year, month, day] = dateStr.split('-');
@@ -92,7 +80,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
             textAlign: 'center',
           }}
         >
-          Thông tin đặt phòng
+          Thông tin đặt
         </Text>
         <View style={{ width: 40, height: 1 }}></View>
       </ImageBackground>
@@ -123,7 +111,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               lineHeight: 18,
             }}
           >
-            {sttBooking[item.status].desc[0]}
+            {sttBooking[item.status].desc[1]}
             {item.status === '6' && (
               <Text
                 style={{
@@ -156,7 +144,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               marginBottom: 12,
             }}
           >
-            Thông tin nhận phòng
+            Thông tin nhận bàn
           </Text>
           <View
             style={{
@@ -263,7 +251,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 color: '#212B36',
               }}
             >
-              Phòng của bạn
+              Cơ sở ẩm thực
             </Text>
             <TouchableOpacity
               style={{
@@ -382,255 +370,85 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               </Text>
             </View>
 
-            <View
-              style={{
-                gap: 12,
-                borderBottomWidth: 1,
-                borderStyle: 'dashed',
-                paddingBottom: 12,
-                borderColor: '#919EAB3D',
-              }}
-            >
-              {placeInfo.rooms.map((value, index) => (
-                <View key={index} style={{ flexDirection: 'row' }}>
-                  <Image
-                    source={value.image}
-                    style={{ width: 70, height: 70, marginRight: 8 }}
-                  ></Image>
-                  <View
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={placeInfo.image}
+                style={{ width: 74, height: 74, marginRight: 12 }}
+              ></Image>
+              <View style={{ justifyContent: 'space-between' }}>
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
+                >
+                  <Text
                     style={{
-                      flex: 1,
-                      flexShrink: 1,
-                      justifyContent: 'space-between',
+                      fontWeight: 400,
+                      fontSize: 14,
+                      lineHeight: 22,
+                      color: '#212B36',
                     }}
                   >
-                    <Text
-                      style={{
-                        fontWeight: 600,
-                        fontSize: 14,
-                        lineHeight: 22,
-                      }}
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                    >
-                      {value.name}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'flex-start',
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontWeight: 400,
-                            fontSize: 14,
-                            lineHeight: 22,
-                            color: '#212B36',
-                          }}
-                        >
-                          Số phòng:{' '}
-                        </Text>
-                        <Text
-                          style={{
-                            fontWeight: 600,
-                            fontSize: 14,
-                            lineHeight: 22,
-                          }}
-                        >
-                          {value.theNumOfRoom}
-                        </Text>
-                      </View>
-                      <Text
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 14,
-                          lineHeight: 22,
-                          color: '#212B36',
-                        }}
-                      >
-                        {value.price.toLocaleString('de-DE')} VND
-                      </Text>
-                    </View>
-                  </View>
+                    Ngày nhận bàn:{' '}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 14,
+                      lineHeight: 22,
+                    }}
+                  >
+                    {formatVNDate(placeInfo.dayStart)}
+                  </Text>
                 </View>
-              ))}
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <View>
-                <Text
-                  style={{
-                    fontWeight: 400,
-                    fontSize: 12,
-                    lineHeight: 18,
-                  }}
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
                 >
-                  Nhận phòng
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 14,
-                    lineHeight: 22,
-                  }}
+                  <Text
+                    style={{
+                      fontWeight: 400,
+                      fontSize: 14,
+                      lineHeight: 22,
+                      color: '#212B36',
+                    }}
+                  >
+                    Giờ dùng bữa:{' '}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 14,
+                      lineHeight: 22,
+                    }}
+                  >
+                    {placeInfo.timeStart}
+                  </Text>
+                </View>
+                <View
+                  style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
                 >
-                  {formatVNDate(placeInfo.dayStart)}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  paddingVertical: 4,
-                  paddingHorizontal: 16,
-                  borderRadius: 8,
-                  backgroundColor: '#81BA41',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 12,
-                    lineHeight: 18,
-                    color: '#FFFFFF',
-                  }}
-                >
-                  {diffDate() - 1} đêm
-                </Text>
-              </View>
-
-              <View>
-                <Text
-                  style={{
-                    fontWeight: 400,
-                    fontSize: 12,
-                    lineHeight: 18,
-                  }}
-                >
-                  Trả phòng
-                </Text>
-                <Text
-                  style={{
-                    fontWeight: 600,
-                    fontSize: 14,
-                    lineHeight: 22,
-                  }}
-                >
-                  {formatVNDate(placeInfo.dayEnd)}
-                </Text>
+                  <Text
+                    style={{
+                      fontWeight: 400,
+                      fontSize: 14,
+                      lineHeight: 22,
+                      color: '#212B36',
+                    }}
+                  >
+                    Số lượng người:{' '}
+                  </Text>
+                  <Text
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 14,
+                      lineHeight: 22,
+                    }}
+                  >
+                    {placeInfo.numberOfPeople}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
-        {item.status !== '6' &&
-          placeInfo.services !== undefined &&
-          placeInfo.services?.length !== 0 && (
-            <View style={{ paddingHorizontal: 16 }}>
-              <Text
-                style={{
-                  fontWeight: 600,
-                  fontSize: 14,
-                  lineHeight: 22,
-                  color: '#212B36',
-                  marginBottom: 12,
-                }}
-              >
-                Dịch vụ đã sử dụng
-              </Text>
-              <View
-                style={{
-                  flex: 1,
-                  padding: 12,
-                  borderRadius: 8,
-
-                  backgroundColor: '#fff',
-                  marginBottom: 16,
-
-                  borderWidth: 1,
-                  borderColor: 'rgba(145, 158, 171, 0.25)',
-                  elevation: 12,
-                  shadowColor: 'rgba(145, 158, 171, 0.70)',
-                  shadowOffset: { width: 0, height: 8 },
-                  shadowOpacity: 1,
-                  shadowRadius: 20,
-                }}
-              >
-                {[
-                  { label: 'Tên dịnh vụ', quantity: 'Slg', price: 'Tổng tiền' },
-                  ...(servicesTable ?? []),
-                ].map(({ label, quantity, price }, index) => (
-                  <View
-                    key={index}
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingVertical: 6,
-                      borderBottomWidth:
-                        index === (servicesTable?.length ?? 0) ? 0 : 1,
-                      borderStyle: 'dashed',
-                      borderColor: '#919EAB3D',
-                    }}
-                  >
-                    <View style={{ width: '40%' }}>
-                      <Text
-                        style={{
-                          fontWeight: 400,
-                          fontSize: 14,
-                          lineHeight: 22,
-                          color: '#212B36',
-                          textAlign: 'left',
-                        }}
-                      >
-                        {label}
-                      </Text>
-                    </View>
-                    <View style={{ width: '20%' }}>
-                      <Text
-                        style={{
-                          fontWeight: 400,
-                          fontSize: 14,
-                          lineHeight: 22,
-                          color: '#212B36',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {quantity}
-                      </Text>
-                    </View>
-                    <View style={{ width: '40%' }}>
-                      <Text
-                        style={{
-                          fontWeight: 400,
-                          fontSize: 14,
-                          lineHeight: 22,
-                          color: '#212B36',
-                          textAlign: 'right',
-                        }}
-                      >
-                        {typeof price === 'number'
-                          ? `${price.toLocaleString('de-DE')}`
-                          : price}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
         {item.status !== '6' && (
           <View style={{ paddingHorizontal: 16 }}>
             <Text
@@ -642,7 +460,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 marginBottom: 12,
               }}
             >
-              Chi tiết thanh toán
+              Hóa đơn
             </Text>
             <View
               style={{
@@ -663,46 +481,27 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               }}
             >
               {[
-                {
-                  label: 'Tiền phòng: ',
-                  value: placeInfo.totalPriceRoom,
-                  isFinal: false,
-                },
-                {
-                  label: 'Tiền dịch vụ: ',
-                  value: placeInfo.totalPriceService
-                    ? placeInfo.totalPriceService
-                    : 0,
-                  isFinal: false,
-                },
-                {
-                  label: 'Chiết khấu: ',
-                  value: placeInfo.totalDiscount ? placeInfo.totalDiscount : 0,
-                  isFinal: false,
-                },
-                {
-                  label: 'Tổng tiền: ',
-                  value: placeInfo.totalPrice ? placeInfo.totalPrice : 0,
-                  isFinal: true,
-                },
-              ].map(({ label, value, isFinal }, index) => (
+                { label: 'Tên Món', quantity: 'Slg', price: 'Tổng tiền' },
+                ...(billTable ?? []),
+              ].map(({ label, quantity, price }, index) => (
                 <View
                   key={index}
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     paddingVertical: 6,
-                    borderBottomWidth: !isFinal ? 1 : 0,
+                    borderBottomWidth:
+                      index === (billTable?.length ?? 0) ? 0 : 1,
                     borderStyle: 'dashed',
                     borderColor: '#919EAB3D',
                   }}
                 >
-                  <View style={{ width: '50%' }}>
+                  <View style={{ width: '60%' }}>
                     <Text
                       style={{
-                        fontWeight: isFinal ? 600 : 400,
-                        fontSize: isFinal ? 16 : 14,
-                        lineHeight: isFinal ? 24 : 22,
+                        fontWeight: 400,
+                        fontSize: 14,
+                        lineHeight: 22,
                         color: '#212B36',
                         textAlign: 'left',
                       }}
@@ -710,17 +509,32 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                       {label}
                     </Text>
                   </View>
-                  <View style={{ width: '50%' }}>
+                  <View style={{ width: '10%' }}>
                     <Text
                       style={{
-                        fontWeight: isFinal ? 600 : 400,
-                        fontSize: isFinal ? 16 : 14,
-                        lineHeight: isFinal ? 24 : 22,
+                        fontWeight: 400,
+                        fontSize: 14,
+                        lineHeight: 22,
+                        color: '#212B36',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {quantity}
+                    </Text>
+                  </View>
+                  <View style={{ width: '30%' }}>
+                    <Text
+                      style={{
+                        fontWeight: 400,
+                        fontSize: 14,
+                        lineHeight: 22,
                         color: '#212B36',
                         textAlign: 'right',
                       }}
                     >
-                      {value.toLocaleString('de-DE')} VND
+                      {typeof price === 'number'
+                        ? `${price.toLocaleString('de-DE')}`
+                        : price}
                     </Text>
                   </View>
                 </View>
@@ -728,6 +542,96 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
             </View>
           </View>
         )}
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text
+            style={{
+              fontWeight: 600,
+              fontSize: 14,
+              lineHeight: 22,
+              color: '#212B36',
+              marginBottom: 12,
+            }}
+          >
+            Chi tiết thanh toán
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              padding: 12,
+              borderRadius: 8,
+
+              backgroundColor: '#fff',
+              marginBottom: 16,
+
+              borderWidth: 1,
+              borderColor: 'rgba(145, 158, 171, 0.25)',
+              elevation: 12,
+              shadowColor: 'rgba(145, 158, 171, 0.70)',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 1,
+              shadowRadius: 20,
+            }}
+          >
+            {[
+              {
+                label: 'Tiền món ăn: ',
+                value: placeInfo.totalBill,
+                isFinal: false,
+              },
+
+              {
+                label: 'Chiết khấu: ',
+                value: placeInfo.totalDiscount ? placeInfo.totalDiscount : 0,
+                isFinal: false,
+              },
+              {
+                label: 'Tổng tiền: ',
+                value: placeInfo.totalPrice ? placeInfo.totalPrice : 0,
+                isFinal: true,
+              },
+            ].map(({ label, value, isFinal }, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 6,
+                  borderBottomWidth: !isFinal ? 1 : 0,
+                  borderStyle: 'dashed',
+                  borderColor: '#919EAB3D',
+                }}
+              >
+                <View style={{ width: '50%' }}>
+                  <Text
+                    style={{
+                      fontWeight: isFinal ? 600 : 400,
+                      fontSize: isFinal ? 16 : 14,
+                      lineHeight: isFinal ? 24 : 22,
+                      color: '#212B36',
+                      textAlign: 'left',
+                    }}
+                  >
+                    {label}
+                  </Text>
+                </View>
+                <View style={{ width: '50%' }}>
+                  <Text
+                    style={{
+                      fontWeight: isFinal ? 600 : 400,
+                      fontSize: isFinal ? 16 : 14,
+                      lineHeight: isFinal ? 24 : 22,
+                      color: '#212B36',
+                      textAlign: 'right',
+                    }}
+                  >
+                    {value.toLocaleString('de-DE')} VND
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
         {item.status !== '6' && (
           <TouchableOpacity
             style={{
@@ -761,7 +665,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                   textAlign: 'center',
                 }}
               >
-                {['1', '2', '3', '4'].includes(item.status)
+                {['1', '2', '3', '4.1'].includes(item.status)
                   ? 'Thông tin thanh toán'
                   : 'Đánh giá ngay'}
               </Text>
@@ -794,7 +698,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 textAlign: 'center',
               }}
             >
-              Huỷ đặt phòng
+              Huỷ đặt bàn
             </Text>
           </TouchableOpacity>
         )}
@@ -808,4 +712,4 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
     </View>
   );
 };
-export default DetailInfoHotelBookingScreen;
+export default DetailInfoRestaurantBookingScreen;

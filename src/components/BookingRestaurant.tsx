@@ -2,12 +2,17 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { BookingRestaurantModel } from '../models/BookingRestaurantModel';
 import { sttBooking } from '../dataraw';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types';
 
-type BookingRestaurantProps = BookingRestaurantModel;
-
-export const BookingRestaurantInList: React.FC<{
-  item: BookingRestaurantProps;
-}> = ({ item }) => {
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+  item: BookingRestaurantModel;
+};
+export const BookingRestaurantInList: React.FC<Props> = ({
+  navigation,
+  item,
+}) => {
   const { placeInfo, userInfo } = item;
 
   const formatVNDate = (dateStr: string) => {
@@ -92,10 +97,19 @@ export const BookingRestaurantInList: React.FC<{
             {placeInfo.name}
           </Text>
         </View>
-        <Image
-          source={require('../../assets/img/icon/info.png')}
-          style={{ width: 24, height: 24, marginLeft: 10 }}
-        ></Image>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('DetailInfoRestaurantBooking', {
+              navigation,
+              item,
+            })
+          }
+        >
+          <Image
+            source={require('../../assets/img/icon/info.png')}
+            style={{ width: 24, height: 24, marginLeft: 10 }}
+          ></Image>
+        </TouchableOpacity>
       </View>
 
       <View style={{ flexDirection: 'row' }}>

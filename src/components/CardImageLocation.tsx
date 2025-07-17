@@ -2,29 +2,18 @@ import React from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
 type CardImageLocationProps = {
-  rating: number;
+  rate: number;
   name: string;
   location: string;
-  sourceImg: string;
+  image: string;
 };
 
 export const CardImageLocation: React.FC<CardImageLocationProps> = ({
-  rating,
+  rate,
   name,
   location,
-  sourceImg,
+  image,
 }) => {
-  const AllSourceImg: any = {
-    1: require('../../assets/img/location/1.png'),
-    2: require('../../assets/img/location/2.png'),
-    3: require('../../assets/img/location/3.png'),
-    4: require('../../assets/img/location/4.png'),
-    5: require('../../assets/img/location/5.png'),
-  };
-
-  const _sourceImg =
-    AllSourceImg[sourceImg] || require('../../assets/img/location/1.png');
-
   const star = require('../../assets/img/icon/star.png');
   const half_star = require('../../assets/img/icon/half-star.png');
   const empty_star = require('../../assets/img/icon/empty-star.png');
@@ -54,7 +43,7 @@ export const CardImageLocation: React.FC<CardImageLocationProps> = ({
   return (
     <View style={styles.container}>
       <Image
-        source={_sourceImg}
+        source={{ uri: image }}
         style={{
           width: 200,
           height: 130,
@@ -97,9 +86,9 @@ export const CardImageLocation: React.FC<CardImageLocationProps> = ({
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {renderStars(rating)}
+        {renderStars(rate)}
         <Text style={{ fontSize: 10, fontWeight: '400', color: '#637381' }}>
-          {rating}/5
+          {rate.toFixed(1)}/5
         </Text>
       </View>
     </View>

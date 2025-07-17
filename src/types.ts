@@ -1,5 +1,5 @@
-import { BookingHotelModel } from './models/BookingHotelModel';
-import { BookingRestaurantModel } from './models/BookingRestaurantModel';
+import { HotelBooking } from './slice/hotelBookingSlice';
+import { RestaurantBooking } from './slice/restaurantBookingSlice';
 
 export type RootStackParamList = {
   Login: any;
@@ -13,8 +13,11 @@ export type RootStackParamList = {
   Menu: any;
   Four: any;
 
-  DetailInfoHotelBooking: { navigation: any; item: BookingHotelModel };
-  DetailInfoRestaurantBooking: { navigation: any; item: BookingRestaurantModel };
+  DetailInfoHotelBooking: { navigation: any; item: HotelBooking };
+  DetailInfoRestaurantBooking: {
+    navigation: any;
+    item: RestaurantBooking;
+  };
 
   RouteInMenu: any;
   HeartInMenu: any;

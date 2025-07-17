@@ -2,45 +2,34 @@ import React from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
 type ImageLocationProps = {
-  rating: number;
+  rate: number;
   name: string;
   location: string;
-  sourceImg: string;
+  image: string;
 };
 
 export const ImageLocation: React.FC<ImageLocationProps> = ({
-  rating,
+  rate,
   name,
   location,
-  sourceImg,
+  image,
 }) => {
-  const AllSourceImg: any = {
-    1: require('../../assets/img/location/1.png'),
-    2: require('../../assets/img/location/2.png'),
-    3: require('../../assets/img/location/3.png'),
-    4: require('../../assets/img/location/4.png'),
-    5: require('../../assets/img/location/5.png'),
-  };
-
-  const _sourceImg =
-    AllSourceImg[sourceImg] || require('../../assets/img/location/1.png');
-
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={_sourceImg}
+        source={{ uri: image }}
         style={styles.image}
         imageStyle={{ borderRadius: 8 }}
       >
-        <View style={styles.ratingBox}>
+        <View style={styles.rateBox}>
           <Image
             source={require('../../assets/img/icon/star.png')}
             style={[styles.icon, { tintColor: '#FFBF00', marginRight: 2 }]}
           />
-          <Text style={styles.ratingText}>{rating}/5</Text>
+          <Text style={styles.rateText}>{rate.toFixed(1)}/5</Text>
         </View>
         <View style={styles.overlay}>
-          <Text style={styles.nameText} numberOfLines={1} >
+          <Text style={styles.nameText} numberOfLines={1}>
             {name}
           </Text>
           <View style={styles.row}>
@@ -64,7 +53,7 @@ const styles = StyleSheet.create({
     aspectRatio: 2,
     overflow: 'hidden',
   },
-  ratingBox: {
+  rateBox: {
     position: 'absolute',
     top: 6,
     right: 6,
@@ -76,8 +65,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  ratingText: {
-    color:"white",
+  rateText: {
+    color: 'white',
     fontFamily: 'Helvetica Neue',
     fontSize: 12,
     lineHeight: 15,

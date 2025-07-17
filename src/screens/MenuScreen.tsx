@@ -12,25 +12,28 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { Header } from '../components/Header';
 import { ItemMenu } from '../components/ItemMenu';
-import { useUser } from '../hooks/useUser';
 import LinearGradient from 'react-native-linear-gradient';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { UserState } from '../slice/userSlice';
+import { logout } from '../slice/userSlice';
 
 type MenuScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Menu'>;
 };
 
 const MenuScreen = ({ navigation }: MenuScreenProps) => {
-  const { user, logout } = useUser();
+  const dispatch = useDispatch();
+  const { isLogin, userInfo } = useSelector(
+    (state: { user: UserState }) => state.user,
+  );
 
   const type: { [key: string]: string } = {
     '1': 'Tiện ích',
     '2': 'Hỗ trợ',
     '3': 'Cài đặt',
   };
-  const _user = {
-    id: 1,
-    name: 'Nam Nguyen',
-  };
+
   const menu: { [key: string]: any[] } = {
     '1': [
       {
@@ -105,15 +108,13 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
       },
     ],
   };
-  useEffect(() => {
-    console.log(user);
-  });
 
   return (
     <View style={{ flex: 1 }}>
       <Header navigation={navigation} />
       <ScrollView style={styles.container}>
-        {user && (
+        {/* Thông tin người dùng */}
+        {isLogin && (
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Profile');
@@ -137,14 +138,14 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
               }}
             >
               <Image
-                source={require('../../assets/img/avt.jpg')}
+                source={{ uri: userInfo.avt }}
                 style={{
                   borderRadius: 1000,
                   height: 46,
                   width: 46,
                   marginRight: 16,
                 }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
               <View style={{ alignItems: 'flex-start' }}>
                 <Text
@@ -154,7 +155,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
                     lineHeight: 24,
                   }}
                 >
-                  {user ? user.name.toString() : ''}
+                  {userInfo.name}
                 </Text>
                 <Text
                   style={{
@@ -170,7 +171,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
             </View>
           </TouchableOpacity>
         )}
-        {!user && (
+        {!isLogin && (
           <TouchableOpacity>
             <View
               style={{
@@ -235,9 +236,8 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
                   marginTop: 16,
                 }}
                 onPress={() => {
-                  if (logout) {
-                    logout();
-                  }
+                  dispatch(logout());
+
                   navigation.reset({
                     index: 0,
                     routes: [{ name: 'Login' }],
@@ -273,24 +273,72 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
             </View>
           </TouchableOpacity>
         )}
+        {/* Danh mục */}
         {Object.entries(menu).map(([sectionKey, items]) => (
           <View style={{ paddingHorizontal: 16 }} key={sectionKey}>
             <Text style={styles.title}>{type[sectionKey]}</Text>
             <View style={{ gap: 16 }}>
-              {items.map((item, index) => (
-                <ItemMenu
-                  key={index}
-                  icon={item.icon}
-                  text={item.text}
-                  detail={item.detail}
-                  mustLogin={item.mustLogin}
-                  navigation={navigation}
-                  isLogin={false}
-                />
-              ))}
+              {items.map((item, index) => {
+                if ((item.mustLogin && isLogin) || !item.mustLogin) {
+                  return (
+                    <ItemMenu
+                      key={index}
+                      icon={item.icon}
+                      text={item.text}
+                      detail={item.detail}
+                      mustLogin={item.mustLogin}
+                      navigation={navigation}
+                      isLogin={false}
+                    />
+                  );
+                }
+                return null;
+              })}
             </View>
           </View>
         ))}
+        {/* Nút đăng xuất */}
+        {isLogin && (
+          <TouchableOpacity
+            style={{
+              margin: 16,
+            }}
+            onPress={() => {
+              dispatch(logout());
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
+            }}
+          >
+            <LinearGradient
+              colors={['#80B941', '#65A438', '#4A9341']} // tùy chỉnh màu gradient
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 6,
+                paddingVertical: 6,
+                paddingHorizontal: 16,
+              }}
+            >
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 15,
+                  fontWeight: '700',
+                  lineHeight: 26,
+                  letterSpacing: 0,
+                  textAlign: 'center',
+                }}
+              >
+                Đăng xuất
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
         <View style={{ height: 144 }} />
       </ScrollView>
       <FooterMenu navigation={navigation} selected="menu" />

@@ -14,7 +14,6 @@ export const CusItemMenu: React.FC<CusItemMenuProps> = ({
   Title,
   colorBg,
 }) => {
-  console.log(sourceIcon);
   
 
   const AllSourceIcon: any = {

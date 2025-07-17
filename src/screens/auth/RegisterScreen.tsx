@@ -66,8 +66,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   }, []);
 
   const handleBackPress = () => {
-    console.log(123);
-
     navigation.goBack();
   };
 

@@ -18,10 +18,20 @@ import { RootStackParamList } from '../types';
 import { CusItemMenu } from '../components/CusItemMenu';
 import { ImageLocation } from '../components/ImageLocation';
 import { CardImageLocation } from '../components/CardImageLocation';
-import { CardImageHotel } from '../components/CardImageHotel';
+import { CardImage } from '../components/CardImage';
 import { FooterMenu } from '../components/FooterMenu';
-import { transformer } from '../../metro.config';
 import { Header } from '../components/Header';
+
+import { API_URL } from '../const/const';
+import { useDispatch, useSelector } from 'react-redux';
+import { LocationState, setLocation } from '../slice/locationSlice';
+import { HomeState, setisLoaded } from '../slice/homeSlice';
+import {
+  Restaurant,
+  RestaurantState,
+  setRestaurant,
+} from '../slice/restaurantSlice';
+import { Hotel, HotelState, setHotel } from '../slice/hotelSlice';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -58,81 +68,75 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     },
   ];
 
-  const location = [
-    {
-      rating: 5,
-      name: 'Phan Si Păng',
-      location: 'SaPa, Lào Cai',
-      sourceImg: '1',
-    },
-    {
-      rating: 4.7,
-      name: 'Đồi chè trái tim',
-      location: 'Bản Ôn, thị trấn Nông Trường Mộc Châu, H. Mộc Châu, Sơn La',
-      sourceImg: '2',
-    },
-    {
-      rating: 4.5,
-      name: 'Rừng thông bản Áng',
-      location: 'Bản Áng, xã Đông Sang, H. Mộc Châu, Sơn La',
-      sourceImg: '3',
-    },
-    {
-      rating: 4.2,
-      name: 'Thác Tạt Nàng',
-      location: '6 Cũ, Chiềng Iêng, Mộc Châu, Sơn La',
-      sourceImg: '4',
-    },
-    {
-      rating: 3,
-      name: 'Cầu kính tình yêu',
-      location: 'Mường Sang, Mộc Châu, Sơn La',
-      sourceImg: '5',
-    },
-  ];
+  const dispatch = useDispatch();
 
-  const hotel = [
-    {
-      starNumber: 3,
-      rating: 4.8,
-      name: 'Silk Path Grand Sapa Resort & Spa',
-      location: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
-      sourceImg: '1',
-      price: 1000000,
-    },
-    {
-      starNumber: 3,
-      rating: 4.0,
-      name: 'Silk Path Grand Sapa Resort & Spa',
-      location: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
-      sourceImg: '1',
-      price: 1000000,
-    },
-    {
-      starNumber: 3,
-      rating: 2.5,
-      name: 'Silk Path Grand Sapa Resort & Spa',
-      location: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
-      sourceImg: '1',
-      price: 1000000,
-    },
-    {
-      starNumber: 3,
-      rating: 2,
-      name: 'Silk Path Grand Sapa Resort & Spa',
-      location: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
-      sourceImg: '1',
-      price: 1000000,
-    },
-    {
-      starNumber: 3,
-      rating: 0,
-      name: 'Silk Path Grand Sapa Resort & Spa',
-      location: 'Doi Quan 6, Group 10, Sapa, Lao Cai, Sa Pa',
-      sourceImg: '1',
-      price: 1000000,
-    },
-  ];
+  const { isLoaded } = useSelector((state: { home: HomeState }) => state.home);
+
+  const location = useSelector(
+    (state: { location: LocationState }) => state.location.locations,
+  );
+
+  const hotel = useSelector(
+    (state: { hotel: HotelState }) => state.hotel.hotels,
+  );
+
+  const restaurant = useSelector(
+    (state: { restaurant: RestaurantState }) => state.restaurant.restaurants,
+  );
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const res = await fetch(`${API_URL}/location/getLocation`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        dispatch(setLocation(data.data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const fetchHotel = async () => {
+      try {
+        const res = await fetch(`${API_URL}/hotel/getHotel`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        dispatch(setHotel(data.data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const fetchRestaurant = async () => {
+      try {
+        const res = await fetch(`${API_URL}/restaurant/getRestaurant`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        dispatch(setRestaurant(data.data));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (!isLoaded) {
+      fetchLocation();
+      fetchHotel();
+      fetchRestaurant();
+      dispatch(setisLoaded(true));
+    }
+  }, []);
 
   const discovery_location = [
     'Tất cả',
@@ -141,9 +145,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     'Khu vui chơi giải trí',
   ];
 
-  const [selected1, setSelected1] = useState(1);
-  const [selected2, setSelected2] = useState(1);
+  const discovery_location_after = ['Tất cả', 'Khách sạn', 'Nhà hàng'];
 
+  const [selected1, setSelected1] = useState(0);
+  const [selected2, setSelected2] = useState(0);
+  const _selected2: {
+    [key: number]: (Hotel | Restaurant)[];
+  } = {
+    0: [...hotel, ...restaurant],
+    1: [...hotel],
+    2: [...restaurant],
+  };
   const icon_search = require('../../assets/img/icon/icon-search.png');
   const right_chevron = require('../../assets/img/icon/right-chevron.png');
   const courthouse = require('../../assets/img/icon/courthouse.png');
@@ -177,6 +189,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* header */}
       <Animated.View
         style={[
           !showSearch && styles.header,
@@ -206,6 +219,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
         scrollEventThrottle={16}
       >
+        {/* Thời tiết */}
         <View style={[styles.section, { marginTop: 28, marginBottom: 0 }]}>
           <View
             style={{
@@ -279,6 +293,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
         </View>
+        {/* Tìm kiếm */}
         {!showSearch && (
           <View
             style={[
@@ -298,7 +313,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
         )}
-
+        {/* banner1 */}
         <View style={styles.section}>
           <Image
             source={banner1}
@@ -310,7 +325,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             resizeMode="contain"
           />
         </View>
-
+        {/* Item */}
         <View style={[styles.section, { marginBottom: 0 }]}>
           <View style={styles.menuContainer}>
             {Menu.map((item, index) => (
@@ -324,6 +339,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             ))}
           </View>
         </View>
+        {/* Điểm đến được ưa chuộng nhất */}
         <ImageBackground
           source={bg1}
           style={{ width: '100%', paddingTop: 24 }}
@@ -351,10 +367,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   ]}
                 >
                   <ImageLocation
-                    rating={item.rating}
+                    rate={item.rate}
                     name={item.name}
                     location={item.location}
-                    sourceImg={item.sourceImg}
+                    image={item.image}
                   />
                 </View>
               ))}
@@ -385,7 +401,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </View>
           </View>
         </ImageBackground>
-
+        {/* banner2 */}
         <View style={styles.section}>
           <Image
             source={banner2}
@@ -397,7 +413,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             resizeMode="contain"
           />
         </View>
-
+        {/* Khám phá địa điểm độc đáo tại SaPa */}
         <View style={styles.section}>
           <View
             style={{
@@ -469,15 +485,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             {location.map((item, index) => (
               <CardImageLocation
                 key={index}
-                rating={item.rating}
+                rate={item.rate}
                 name={item.name}
                 location={item.location}
-                sourceImg={item.sourceImg}
+                image={item.image}
               />
             ))}
           </ScrollView>
         </View>
-
+        {/* Tiện ích */}
         <View style={[styles.section, { paddingHorizontal: 0 }]}>
           <ImageBackground
             source={bg2}
@@ -576,7 +592,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </ScrollView>
           </ImageBackground>
         </View>
-
+        {/* Địa điểm nghỉ dưỡng  */}
         <View style={styles.section}>
           <View
             style={{
@@ -612,16 +628,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
-            {discovery_location.map((item, index) => (
+            {discovery_location_after.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => setSelected1(index)}
+                onPress={() => setSelected2(index)}
                 style={{
                   paddingHorizontal: 8,
                   paddingVertical: 2,
                   borderRadius: 50,
                   backgroundColor:
-                    selected1 === index ? '#81BA41' : '#919EAB29',
+                    selected2 === index ? '#81BA41' : '#919EAB29',
                 }}
               >
                 <Text
@@ -629,7 +645,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     fontSize: 14,
                     lineHeight: 22,
                     fontWeight: 400,
-                    color: selected1 === index ? '#ffffff' : '#000000',
+                    color: selected2 === index ? '#ffffff' : '#000000',
                   }}
                 >
                   {item}
@@ -643,17 +659,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
-            {hotel.map((item, index) => (
-              <CardImageHotel
-                key={index}
-                starNumber={item.starNumber}
-                price={item.price}
-                rating={item.rating}
-                name={item.name}
-                location={item.location}
-                sourceImg={item.sourceImg}
-              />
-            ))}
+            {_selected2[selected2]
+              .sort((a, b) => b.rate - a.rate)
+              .map((item, index) => {
+                const isHotel = 'price' in item;
+
+                return (
+                  <CardImage
+                    key={index}
+                    star={isHotel ? item.star : -1}
+                    rate={item.rate}
+                    name={item.name}
+                    location={item.location}
+                    image={item.image}
+                    price={isHotel ? item.price : -1}
+                    time_open={!isHotel ? item.time_open : undefined}
+                    time_close={!isHotel ? item.time_close : undefined}
+                  />
+                );
+              })}
           </ScrollView>
         </View>
         <View style={{ height: 144 }} />

@@ -25,7 +25,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
   const login = (email: any, pass: any) => {
-    console.log(email, pass);
 
     setUser({
       name: email,

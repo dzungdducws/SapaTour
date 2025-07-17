@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { BookingHotelModel } from '../models/BookingHotelModel';
 import { sttBooking } from '../dataraw';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
+import { HotelBooking } from '../slice/hotelBookingSlice';
+import { formatVNDate } from '../utils/utils';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
-  item: BookingHotelModel;
+  item: HotelBooking;
   onPressThongTinThanhToan: () => void;
 };
 
@@ -16,21 +17,16 @@ export const BookingHotelInList: React.FC<Props> = ({
   item,
   onPressThongTinThanhToan,
 }) => {
-  const { userInfo, placeInfo } = item;
+  const { rooms } = item;
 
   const diffDate = (): number => {
-    const s = new Date(placeInfo.dayStart);
-    const e = new Date(placeInfo.dayEnd);
+    const s = new Date(item.check_in_date);
+    const e = new Date(item.check_out_date);
 
     const diffTime = Math.abs(e.getTime() - s.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     return diffDays;
-  };
-
-  const formatVNDate = (dateStr: string) => {
-    const [year, month, day] = dateStr.split('-');
-    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -59,19 +55,22 @@ export const BookingHotelInList: React.FC<Props> = ({
             fontWeight: 600,
             fontSize: 14,
             lineHeight: 22,
+            width: '70%',
           }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
         >
-          Mã booking: {item.idBooking}
+          Mã booking: {item.id}
         </Text>
         <Text
           style={{
             fontWeight: 600,
             fontSize: 12,
             lineHeight: 18,
-            color: sttBooking[item.status.toString()].color,
+            color: sttBooking[item.status].color,
           }}
         >
-          {sttBooking[item.status.toString()].text}
+          {sttBooking[item.status].text}
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -99,7 +98,7 @@ export const BookingHotelInList: React.FC<Props> = ({
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {placeInfo.name}
+            {item.name}
           </Text>
         </View>
         <TouchableOpacity
@@ -144,7 +143,7 @@ export const BookingHotelInList: React.FC<Props> = ({
               lineHeight: 22,
             }}
           >
-            {formatVNDate(placeInfo.dayStart)}
+            {formatVNDate(item.check_in_date)}
           </Text>
         </View>
 
@@ -186,16 +185,16 @@ export const BookingHotelInList: React.FC<Props> = ({
               lineHeight: 22,
             }}
           >
-            {formatVNDate(placeInfo.dayEnd)}
+            {formatVNDate(item.check_out_date)}
           </Text>
         </View>
       </View>
 
       <View style={{ gap: 12 }}>
-        {placeInfo.rooms.map((value, index) => (
+        {rooms.map((value, index) => (
           <View key={index} style={{ flexDirection: 'row' }}>
             <Image
-              source={value.image}
+              source={{ uri: value.image }}
               style={{ width: 48, height: 48, marginRight: 8 }}
             ></Image>
             <View
@@ -245,7 +244,7 @@ export const BookingHotelInList: React.FC<Props> = ({
                       lineHeight: 22,
                     }}
                   >
-                    {value.theNumOfRoom}
+                    {value.numberOfRoom}
                   </Text>
                 </View>
                 <Text
@@ -282,7 +281,7 @@ export const BookingHotelInList: React.FC<Props> = ({
             color: '#81BA41',
           }}
         >
-          {(2300000).toLocaleString('de-DE')}VNDD
+          {item.totalPrice.toLocaleString('de-DE')}VND
         </Text>
       </View>
       <View
@@ -312,7 +311,7 @@ export const BookingHotelInList: React.FC<Props> = ({
             lineHeight: 22,
           }}
         >
-          Ghi chú: {userInfo.note}
+          Ghi chú: {item.note}
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

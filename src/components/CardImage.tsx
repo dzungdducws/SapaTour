@@ -1,29 +1,27 @@
 import React from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
-type CardImageHotelProps = {
-  starNumber: number;
-  rating: number;
+type CardImageProps = {
   name: string;
   location: string;
-  sourceImg: string;
-  price: number;
+  image: string;
+  rate: number;
+  star?: number;
+  price?: number;
+  time_open?: string;
+  time_close?: string;
 };
 
-export const CardImageHotel: React.FC<CardImageHotelProps> = ({
-  rating,
+export const CardImage: React.FC<CardImageProps> = ({
   name,
   location,
-  sourceImg,
+  image,
+  rate,
+  star,
   price,
-  starNumber,
+  time_open,
+  time_close,
 }) => {
-  const AllSourceImg: any = {
-    1: require('../../assets/img/hotel/1.png'),
-  };
-
-  const _sourceImg =
-    AllSourceImg[sourceImg] || require('../../assets/img/hotel/1.png');
   const starIcon = require('../../assets/img/icon/star.png');
   const map_pin_nocolor = require('../../assets/img/icon/map-pin-nocolor.png');
 
@@ -45,7 +43,7 @@ export const CardImageHotel: React.FC<CardImageHotelProps> = ({
   return (
     <View style={styles.container}>
       <Image
-        source={_sourceImg}
+        source={{ uri: image }}
         style={{
           width: 200,
           height: 130,
@@ -58,15 +56,58 @@ export const CardImageHotel: React.FC<CardImageHotelProps> = ({
       <Text style={{ fontSize: 12, fontWeight: '500', color: '#111' }}>
         {name}
       </Text>
+      {star !== -1 && (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 4,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: 400,
+              fontSize: 12,
+              lineHeight: 18,
+            }}
+          >
+            Hạng sao:
+          </Text>
+          <View
+            style={{
+              paddingHorizontal: 8,
+              paddingVertical: 2,
+              borderRadius: 50,
+              backgroundColor: '#FFBF00',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4,
+            }}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 600,
+                fontSize: 12,
+                lineHeight: 18,
+              }}
+            >
+              {star}
+            </Text>
+            <Image
+              source={starIcon}
+              style={{
+                width: 12,
+                height: 12,
+                tintColor: 'white',
+              }}
+            />
+          </View>
+        </View>
+      )}
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: 4,
-        }}
-      >
+      {time_open && time_close && (
         <Text
           style={{
             fontWeight: 400,
@@ -74,39 +115,9 @@ export const CardImageHotel: React.FC<CardImageHotelProps> = ({
             lineHeight: 18,
           }}
         >
-          Hạng sao:
+          Thời gian hoặt động: {time_open} - {time_close}
         </Text>
-        <View
-          style={{
-            paddingHorizontal: 8,
-            paddingVertical: 2,
-            borderRadius: 50,
-            backgroundColor: '#FFBF00',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 4,
-          }}
-        >
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: 600,
-              fontSize: 12,
-              lineHeight: 18,
-            }}
-          >
-            {starNumber}
-          </Text>
-          <Image
-            source={starIcon}
-            style={{
-              width: 12,
-              height: 12,
-              tintColor: 'white',
-            }}
-          />
-        </View>
-      </View>
+      )}
 
       <View
         style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}
@@ -157,7 +168,7 @@ export const CardImageHotel: React.FC<CardImageHotelProps> = ({
               lineHeight: 18,
             }}
           >
-            {rating}
+            {rate.toFixed(1)}
           </Text>
         </View>
 
@@ -168,39 +179,40 @@ export const CardImageHotel: React.FC<CardImageHotelProps> = ({
             lineHeight: 18,
           }}
         >
-          {renterTextRating(rating)}
+          {renterTextRating(rate)}
         </Text>
       </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          gap: 4,
-        }}
-      >
-        <Text
+      {price !== -1 && (
+        <View
           style={{
-            fontWeight: 400,
-            fontSize: 12,
-            lineHeight: 18,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: 4,
           }}
         >
-          Giá chỉ từ:
-        </Text>
+          <Text
+            style={{
+              fontWeight: 400,
+              fontSize: 12,
+              lineHeight: 18,
+            }}
+          >
+            Giá chỉ từ:
+          </Text>
 
-        <Text
-          style={{
-            color: '#FF4842',
-            fontWeight: 600,
-            fontSize: 14,
-            lineHeight: 22,
-          }}
-        >
-          {price.toLocaleString('de-DE')} VND
-        </Text>
-      </View>
+          <Text
+            style={{
+              color: '#FF4842',
+              fontWeight: 600,
+              fontSize: 14,
+              lineHeight: 22,
+            }}
+          >
+            {price ? price.toLocaleString('de-DE') : 'Liên hệ'} VND
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

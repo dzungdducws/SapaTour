@@ -1,24 +1,21 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { BookingRestaurantModel } from '../models/BookingRestaurantModel';
 import { sttBooking } from '../dataraw';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
+import { RestaurantBooking } from '../slice/restaurantBookingSlice';
+import { formatVNDate } from '../utils/utils';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
-  item: BookingRestaurantModel;
+  item: RestaurantBooking;
 };
 export const BookingRestaurantInList: React.FC<Props> = ({
   navigation,
   item,
 }) => {
-  const { placeInfo, userInfo } = item;
+  const { bill } = item;
 
-  const formatVNDate = (dateStr: string) => {
-    const [year, month, day] = dateStr.split('-');
-    return `${day}/${month}/${year}`;
-  };
   return (
     <View
       style={{
@@ -47,7 +44,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
             lineHeight: 22,
           }}
         >
-          Mã booking: {item.idBooking}
+          Mã booking: {item.id}
         </Text>
         <Text
           style={{
@@ -94,7 +91,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {placeInfo.name}
+            {item.name}
           </Text>
         </View>
         <TouchableOpacity
@@ -114,7 +111,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
 
       <View style={{ flexDirection: 'row' }}>
         <Image
-          source={placeInfo.image}
+          source={{ uri: item.image }}
           style={{ width: 100, height: 100, marginRight: 12 }}
         ></Image>
         <View style={{ justifyContent: 'space-between' }}>
@@ -136,7 +133,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
                 lineHeight: 22,
               }}
             >
-              {formatVNDate(placeInfo.dayStart)}
+              {formatVNDate(item.check_in_date)}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
@@ -157,7 +154,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
                 lineHeight: 22,
               }}
             >
-              {placeInfo.timeStart}
+              {item.check_in_time}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
@@ -178,7 +175,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
                 lineHeight: 22,
               }}
             >
-              {placeInfo.numberOfPeople}
+              {item.number_people}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
@@ -200,7 +197,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
                 color: '#81BA41',
               }}
             >
-              {placeInfo.totalPrice.toLocaleString('de-DE')} VND
+              {item.totalPriceBill.toLocaleString('de-DE')} VND
             </Text>
           </View>
         </View>
@@ -233,7 +230,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
             lineHeight: 22,
           }}
         >
-          Ghi chú: {userInfo.note}
+          Ghi chú: {item.note}
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

@@ -10,10 +10,13 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-
 import LinearGradient from 'react-native-linear-gradient';
+
+import { useDispatch } from 'react-redux';
+import { login } from '../../slice/userSlice';
+
 import { RootStackParamList } from '../../types';
-import { useUser } from '../../hooks/useUser';
+import { API_URL } from '../../const/const';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -29,11 +32,53 @@ const iconEyeOff = require('../../../assets/img/icon/icon-eye-off.png');
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [imageHeight, setImageHeight] = useState(200);
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(true);
+  const [emailOrPhoneNumber, setEmailOrPhoneNumber] =
+    useState('user@gmail.com');
+  const [password, setPassword] = useState('12345678');
+  const dispatch = useDispatch();
 
-  const { user, login } = useUser();
+  const loginUser = async () => {
+    await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        emailOrPhoneNumber,
+        password,
+      }),
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(
+            login({
+              isLogin: true,
+              userInfo: {
+                id: res.data.user.id,
+                name: res.data.user.name,
+                email: res.data.user.email,
+                avt: res.data.user.avt,
+                country: res.data.user.country,
+                address: res.data.user.address,
+                phone: res.data.user.phone,
+                role: res.data.user.role,
+                birthday: res.data.user.birthday,
+                token: res.data.token,
+              },
+            }),
+          );
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' }],
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     let { uri: uri_1 } = Image.resolveAssetSource(imageSource_1);
@@ -68,8 +113,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               placeholder="Nhập email hoặc số điện thoại"
               placeholderTextColor={'#919EAB'}
               style={styles.input}
-              value={email}
-              onChangeText={text => setEmail(text)}
+              value={emailOrPhoneNumber}
+              onChangeText={text => setEmailOrPhoneNumber(text)}
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
@@ -93,7 +138,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                 <Image
-                  source={showPassword ? iconEyeOff : iconEye}
+                  source={!showPassword ? iconEyeOff : iconEye}
                   style={{ width: 24, height: 24, marginLeft: 8 }}
                 />
               </TouchableOpacity>
@@ -119,15 +164,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         </View>
 
         <TouchableOpacity
-          onPress={() => {
-            if (email && password && login) {
-              login(email, password), navigation.navigate('Home');
-            }
+          onPress={async () => {
+            loginUser();
           }}
           activeOpacity={0.8}
         >
           <LinearGradient
-            colors={['#80B941', '#65A438', '#4A9341']} // tùy chỉnh màu gradient
+            colors={['#80B941', '#65A438', '#4A9341']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.loginBtn}
@@ -135,6 +178,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             <Text style={styles.textBtn}>Đăng nhập</Text>
           </LinearGradient>
         </TouchableOpacity>
+
         <View style={{ gap: 8, alignItems: 'center' }}>
           <Text style={styles.label}>
             Bạn chưa có tài khoản?{' '}

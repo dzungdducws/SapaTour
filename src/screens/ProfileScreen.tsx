@@ -14,6 +14,8 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import LinearGradient from 'react-native-linear-gradient';
+import { useSelector } from 'react-redux';
+import { UserState } from '../slice/userSlice';
 
 type ProfileScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Profile'>;
@@ -25,35 +27,42 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
   const pencil_simple_line = require('../../assets/img/icon/pencil-simple-line.png');
   const bg_header = require('../../assets/img/bg/bg_header.png');
 
+  const { userInfo } = useSelector((state: { user: UserState }) => state.user);
+
   const info = {
     name: {
       title: 'Họ tên',
-      value: 'Nguyễn Văn A',
+      value: userInfo.name,
     },
-    nationality: {
+    country: {
       title: 'Quốc tịch',
-      value: 'Việt Nam',
+      value: userInfo.country,
     },
     phone: {
       title: 'Số điện thoại',
-      value: '0123456789',
+      value: userInfo.phone,
     },
     email: {
       title: 'Email',
-      value: 'nguyenvana@gmail.com',
+      value: userInfo.email,
     },
     address: {
       title: 'Địa chỉ',
-      value: 'Hà Nội',
+      value: userInfo.address,
     },
     birth: {
       title: 'Ngày sinh',
-      value: '01/01/2000',
+      value: new Date(userInfo.birthday ?? '').toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }),
     },
   };
 
   return (
     <View style={{ flex: 1 }}>
+      {/* Header */}
       <ImageBackground
         source={bg_header}
         style={{
@@ -94,17 +103,24 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
       </ImageBackground>
       <ScrollView style={{ padding: 16 }}>
         <View style={{ alignItems: 'center' }}>
+          {/* avt */}
           <Image
-            source={require('../../assets/img/avt.jpg')}
+            source={
+              userInfo.avt
+                ? { uri: userInfo.avt }
+                : require('../../assets/img/avt.jpg')
+            }
             style={{
               borderRadius: 1000,
               height: 150,
               width: 150,
               marginBottom: 32,
+              borderWidth: 1,
             }}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
+        {/* Thông tin người dùng */}
         <View style={{ gap: 16 }}>
           {Object.entries(info).map(([sectionKey, items]) => {
             return (
@@ -144,6 +160,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
             );
           })}
         </View>
+        {/* nút đổi mật khẩu */}
         <TouchableOpacity
           style={{
             borderTopWidth: 1,

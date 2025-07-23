@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 export interface HomeState {
-  isLoaded: boolean;
+  isLoadedHome: boolean;
 }
 
 const homeSlice = createSlice({

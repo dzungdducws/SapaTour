@@ -1,16 +1,19 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
   Image,
   TouchableOpacity,
-  Dimensions,
+  Animated,
+  useAnimatedValue,
 } from 'react-native';
 import { RootStackParamList } from '../types';
 
-const screenWidth = Dimensions.get('window').width;
+import { ImageLocal } from '../dataraw';
+import container from '../dependencies/dependencies';
+import { useFocusEffect } from '@react-navigation/native';
 
 type FooterMenuProps = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -21,11 +24,43 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
   navigation,
   selected,
 }) => {
-  const homeIcon = require('../../assets/img/icon/home.png');
-  const mapIcon = require('../../assets/img/icon/map-trifold.png');
-  const logoMain = require('../../assets/img/Logo-Main.png');
-  const tripIcon = require('../../assets/img/icon/suitcase-rolling.png');
-  const menuIcon = require('../../assets/img/icon/list.png');
+  const startTimeRef = useRef<number>(performance.now());
+  const imageLocal = container.get<ImageLocal>('ImageLocal');
+
+  useEffect(() => {
+    const arr = navigation.getState().routes;
+    let res: any[] = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+      let check = true;
+      for (const item of res) {
+        if (item.name === arr[i].name) {
+          check = false;
+          break;
+        }
+      }
+      if (check) res.unshift(arr[i]);
+    }
+
+    navigation.reset({
+      index: 0,
+      routes: res,
+    });
+  }, [navigation]);
+
+  useFocusEffect(() => {
+    if (navigation.getState().routes.length === 1) return;
+    const endTime = performance.now();
+    const transitionTime = endTime - startTimeRef.current;
+    const arr = navigation.getState().routes;
+    console.log(
+      `⏱️ Thời gian chuyển từ ${arr[arr.length - 2].name} sang ${
+        arr[arr.length - 1].name
+      } : ${transitionTime.toFixed(2)}ms`,
+    );
+
+    // Reset time nếu bạn quay lại màn này sau đó
+    startTimeRef.current = performance.now();
+  });
 
   return (
     <View style={styles.container}>
@@ -34,7 +69,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
           onPress={() => {
             navigation.navigate('Home');
           }}
-          icon={homeIcon}
+          icon={imageLocal.homeIcon}
           label="Trang chủ"
           isSeletcted={selected === 'home'}
         />
@@ -42,7 +77,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
           onPress={() => {
             navigation.navigate('Map');
           }}
-          icon={mapIcon}
+          icon={imageLocal.mapIcon}
           label="Bản đồ"
           isSeletcted={selected === 'map'}
         />
@@ -53,7 +88,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
           onPress={() => {
             navigation.navigate('Trip');
           }}
-          icon={tripIcon}
+          icon={imageLocal.tripIcon}
           label="Chuyến đi"
           isSeletcted={selected === 'trip'}
         />
@@ -61,14 +96,14 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
           onPress={() => {
             navigation.navigate('Menu');
           }}
-          icon={menuIcon}
+          icon={imageLocal.menuIcon}
           label="Menu"
           isSeletcted={selected === 'menu'}
         />
       </View>
 
       <TouchableOpacity style={styles.centerButton}>
-        <Image source={logoMain} style={{ width: 46, height: 46 }} />
+        <Image source={imageLocal.logoMain} style={{ width: 46, height: 46 }} />
         <Text style={styles.centerLabel}>Lộ trình du lịch</Text>
       </TouchableOpacity>
     </View>
@@ -87,22 +122,51 @@ const TabItem: React.FC<TabItemProps> = ({
   label,
   isSeletcted,
   onPress,
-}) => (
-  <TouchableOpacity style={styles.tabItem} onPress={onPress}>
-    <Image
-      source={icon}
+}) => {
+  const AnimatedTouchableOpacity =
+    Animated.createAnimatedComponent(TouchableOpacity);
+
+  const fadeAnim = useAnimatedValue(0);
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
+  return (
+    <AnimatedTouchableOpacity
       style={[
-        { width: 24, height: 24 },
-        { tintColor: isSeletcted ? '#81BA41' : '#637381' },
+        styles.tabItem,
+        isSeletcted && {
+          transform: [
+            {
+              scale: fadeAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.25, 1],
+              }),
+            },
+          ],
+        },
       ]}
-    />
-    <Text
-      style={[styles.label, { color: isSeletcted ? '#81BA41' : '#637381' }]}
+      onPress={onPress}
     >
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
+      <Image
+        source={icon}
+        style={[
+          { width: 24, height: 24 },
+          { tintColor: isSeletcted ? '#81BA41' : '#637381' },
+        ]}
+      />
+      <Text
+        style={[styles.label, { color: isSeletcted ? '#81BA41' : '#637381' }]}
+      >
+        {label}
+      </Text>
+    </AnimatedTouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

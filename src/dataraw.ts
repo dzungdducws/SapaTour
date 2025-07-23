@@ -1,8 +1,54 @@
-
 const type = {
   '1': 'Địa điểm lưu trú',
   '2': 'Địa điểm ẩm thực',
 };
+
+export const discovery_location = [
+  'Tất cả',
+  'Danh lam thắng cảnh',
+  'Di tích lịch sử',
+  'Khu vui chơi giải trí',
+];
+
+export const discovery_location_after = ['Tất cả', 'Khách sạn', 'Nhà hàng'];
+
+export const Menu = [
+  {
+    sourceIcon: 'Map-Point',
+    Title: 'Địa điểm\ndu lịch',
+    colorBg: '#EEF4FA',
+    s: 0,
+    e: 0.2,
+  },
+  {
+    sourceIcon: 'Building',
+    Title: 'Địa điểm\nẩm thực',
+    colorBg: '#FBEEEE',
+    s: 0.2,
+    e: 0.4,
+  },
+  {
+    sourceIcon: 'buildings-2',
+    Title: 'Địa điểm\nnghỉ dưỡng',
+    colorBg: '#EBF6EA',
+    s: 0.4,
+    e: 0.6,
+  },
+  {
+    sourceIcon: 'shopping-cart',
+    Title: 'Gian hàng\ntrực tuyến',
+    colorBg: '#FDF2EA',
+    s: 0.6,
+    e: 0.8,
+  },
+  {
+    sourceIcon: 'fi_18472616',
+    Title: 'Tất cả\ndanh mục',
+    colorBg: '#F0F7E8',
+    s: 0.8,
+    e: 1,
+  },
+];
 
 export const sttBooking: {
   [key: string]: {
@@ -572,3 +618,21 @@ export const sttBooking: {
 //     },
 //   ],
 // };
+
+export class ImageLocal {
+  icon_search = require('../assets/img/icon/icon-search.png');
+  right_chevron = require('../assets/img/icon/right-chevron.png');
+  courthouse = require('../assets/img/icon/courthouse.png');
+  hospital = require('../assets/img/icon/hospital.png');
+  banner1 = require('../assets/img/banner/Banner-Home.png');
+  banner2 = require('../assets/img/banner/Banner-Home2.png');
+  bg1 = require('../assets/img/bg/bg_home_1.png');
+  bg2 = require('../assets/img/bg/bg_home_2.png');
+  bg2_1 = require('../assets/img/bg/bg_home_2-1.png');
+
+  homeIcon = require('../assets/img/icon/home.png');
+  mapIcon = require('../assets/img/icon/map-trifold.png');
+  logoMain = require('../assets/img/Logo-Main.png');
+  tripIcon = require('../assets/img/icon/suitcase-rolling.png');
+  menuIcon = require('../assets/img/icon/list.png');
+}

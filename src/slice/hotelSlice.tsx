@@ -12,21 +12,25 @@ export interface Hotel {
 }
 
 export interface HotelState {
+  isLoadedHotel: boolean;
   hotels: Hotel[];
 }
 
 const initialState: HotelState = {
+  isLoadedHotel: false,
   hotels: [],
 };
 
-const locationSlice = createSlice({
+const hotelSlice = createSlice({
   name: 'hotel',
   initialState,
   reducers: {
     setHotel: (state, action: PayloadAction<Hotel[]>) => {
+      state.isLoadedHotel = true;
       state.hotels = action.payload;
     },
     clearHotel: state => {
+      state.isLoadedHotel = false;
       state.hotels = [];
     },
     addHotel: (state, action: PayloadAction<Hotel>) => {
@@ -39,6 +43,6 @@ const locationSlice = createSlice({
 });
 
 export const { setHotel, clearHotel, addHotel, removeHotel } =
-  locationSlice.actions;
+  hotelSlice.actions;
 
-export default locationSlice.reducer;
+export default hotelSlice.reducer;

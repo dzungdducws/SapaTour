@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Image, Text, Animated, useAnimatedValue } from 'react-native';
 
 type CusItemMenuProps = {
   index?: number;
@@ -14,7 +14,15 @@ export const CusItemMenu: React.FC<CusItemMenuProps> = ({
   Title,
   colorBg,
 }) => {
-  
+  const fadeAnim = useAnimatedValue(0);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   const AllSourceIcon: any = {
     'Map-Point': require('../../assets/img/icon/Map-Point.png'),

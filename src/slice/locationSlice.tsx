@@ -10,10 +10,12 @@ export interface Location {
 }
 
 export interface LocationState {
+  isLoadedLocation: boolean;
   locations: Location[];
 }
 
 const initialState: LocationState = {
+  isLoadedLocation: false,
   locations: [],
 };
 
@@ -22,9 +24,12 @@ const locationSlice = createSlice({
   initialState,
   reducers: {
     setLocation: (state, action: PayloadAction<Location[]>) => {
+
+      state.isLoadedLocation = true;
       state.locations = action.payload;
     },
     clearLocation: state => {
+      state.isLoadedLocation = false;
       state.locations = [];
     },
     addLocation: (state, action: PayloadAction<Location>) => {

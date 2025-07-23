@@ -13,21 +13,25 @@ export interface Restaurant {
 }
 
 export interface RestaurantState {
+  isLoadedRestaurant: boolean;
   restaurants: Restaurant[];
 }
 
 const initialState: RestaurantState = {
+  isLoadedRestaurant: false,
   restaurants: [],
 };
 
-const locationSlice = createSlice({
+const restaurantSlice = createSlice({
   name: 'restaurant',
   initialState,
   reducers: {
     setRestaurant: (state, action: PayloadAction<Restaurant[]>) => {
+      state.isLoadedRestaurant = true;
       state.restaurants = action.payload;
     },
     clearRestaurant: state => {
+      state.isLoadedRestaurant = false;
       state.restaurants = [];
     },
     addRestaurant: (state, action: PayloadAction<Restaurant>) => {
@@ -46,6 +50,6 @@ export const {
   clearRestaurant,
   addRestaurant,
   removeRestaurant,
-} = locationSlice.actions;
+} = restaurantSlice.actions;
 
-export default locationSlice.reducer;
+export default restaurantSlice.reducer;

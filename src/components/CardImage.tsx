@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
 type CardImageProps = {
@@ -12,7 +12,7 @@ type CardImageProps = {
   time_close?: string;
 };
 
-export const CardImage: React.FC<CardImageProps> = ({
+const CardImage: React.FC<CardImageProps> = ({
   name,
   location,
   image,
@@ -226,3 +226,5 @@ const styles = StyleSheet.create({
     gap: 4,
   },
 });
+
+export default memo(CardImage);

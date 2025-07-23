@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { FooterMenu } from '../components/FooterMenu';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -10,6 +10,15 @@ type MapScreenProps = {
 };
 
 const MapScreen = ({ navigation }: MapScreenProps) => {
+  useEffect(() => {
+    const start = performance.now();
+    return () => {
+      console.log(
+        `[MapScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+      );
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
       <Header navigation={navigation}></Header>

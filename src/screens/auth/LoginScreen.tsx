@@ -9,6 +9,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Animated,
+  useAnimatedValue,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -37,6 +39,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     useState('user@gmail.com');
   const [password, setPassword] = useState('12345678');
   const dispatch = useDispatch();
+
+  const fadeAnim = useAnimatedValue(0);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   const loginUser = async () => {
     await fetch(`${API_URL}/auth/login`, {
@@ -102,12 +114,65 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <Image source={flagSource} style={styles.flag} />
       </ImageBackground>
       <View style={{ flex: 1, marginTop: 60, alignItems: 'center' }}>
-        <View style={{ gap: 10 }}>
-          <Image source={imageSource_2} style={{ width: 75, height: 75 }} />
+        <Animated.View
+          style={{
+            gap: 10,
+            opacity: fadeAnim,
+            transform: [
+              {
+                translateX: fadeAnim.interpolate({
+                  inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                  outputRange: [-20, 20, 0, 0, 0, 0],
+                }),
+              },
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
+                  outputRange: [0, 0, 0, -20, 20, 0],
+                }),
+              },
+            ],
+          }}
+        >
+          <Animated.Image
+            source={imageSource_2}
+            style={{
+              width: 75,
+              height: 75,
+              transform: [
+                {
+                  scale: fadeAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.5, 1],
+                  }),
+                },
+              ],
+            }}
+          />
           <Text style={styles.nameApp}>Sapa Tour</Text>
-        </View>
-        <View style={{ padding: 16, width: '100%', gap: 16 }}>
-          <View style={{ gap: 8 }}>
+        </Animated.View>
+        <Animated.View
+          style={{
+            padding: 16,
+            width: '100%',
+            gap: 16,
+            opacity: fadeAnim,
+            transform: [
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-20, 0],
+                }),
+              },
+            ],
+          }}
+        >
+          {/* email/sdt */}
+          <View
+            style={{
+              gap: 8,
+            }}
+          >
             <Text>Email/ Số điện thoại</Text>
             <TextInput
               placeholder="Nhập email hoặc số điện thoại"
@@ -117,7 +182,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               onChangeText={text => setEmailOrPhoneNumber(text)}
             ></TextInput>
           </View>
-          <View style={{ gap: 8 }}>
+          {/* mật khẩu  */}
+          <View
+            style={{
+              gap: 8,
+            }}
+          >
             <Text>Mật khẩu</Text>
             <View
               style={{
@@ -144,63 +214,77 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View
+        </Animated.View>
+        <Animated.View
           style={{
-            width: '100%',
             padding: 16,
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+            opacity: fadeAnim,
+            transform: [
+              {
+                translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0],
+                }),
+              },
+            ],
           }}
         >
-          <Text
-            style={styles.textForgetPass}
-            onPress={() => {
-              navigation.navigate('ForgotPassword');
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
             }}
           >
-            Quên mật khẩu?
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          onPress={async () => {
-            loginUser();
-          }}
-          activeOpacity={0.8}
-        >
-          <LinearGradient
-            colors={['#80B941', '#65A438', '#4A9341']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.loginBtn}
-          >
-            <Text style={styles.textBtn}>Đăng nhập</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-
-        <View style={{ gap: 8, alignItems: 'center' }}>
-          <Text style={styles.label}>
-            Bạn chưa có tài khoản?{' '}
             <Text
               style={styles.textForgetPass}
               onPress={() => {
-                navigation.navigate('Register');
+                navigation.navigate('ForgotPassword');
               }}
             >
-              {' '}
-              Đăng ký
+              Quên mật khẩu?
             </Text>
-          </Text>
-          <Text
-            style={styles.label}
-            onPress={() => {
-              navigation.navigate('Trip');
+          </View>
+
+          <TouchableOpacity
+            onPress={async () => {
+              loginUser();
             }}
+            activeOpacity={0.8}
           >
-            Bỏ qua
-          </Text>
-        </View>
+            <LinearGradient
+              colors={['#80B941', '#65A438', '#4A9341']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.loginBtn}
+            >
+              <Text style={styles.textBtn}>Đăng nhập</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <View style={{ gap: 8, alignItems: 'center' }}>
+            <Text style={styles.label}>
+              Bạn chưa có tài khoản?{' '}
+              <Text
+                style={styles.textForgetPass}
+                onPress={() => {
+                  navigation.navigate('Register');
+                }}
+              >
+                {' '}
+                Đăng ký
+              </Text>
+            </Text>
+            <Text
+              style={styles.label}
+              onPress={() => {
+                navigation.navigate('Home');
+              }}
+            >
+              Bỏ qua
+            </Text>
+          </View>
+        </Animated.View>
       </View>
       <Image
         source={imageSource_3}

@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from 'react-native';
 import { FooterMenu } from '../components/FooterMenu';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -18,12 +19,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BookingHotelInList } from '../components/BookingHotel';
 import { UserState, logout } from '../slice/userSlice';
 import {
+  clearHotelBooking,
   HotelBooking,
   HotelBookingState,
   setHotelBooking,
 } from '../slice/hotelBookingSlice';
 import { API_URL } from '../const/const';
 import {
+  clearRestaurantBooking,
   RestaurantBooking,
   RestaurantBookingState,
   setRestaurantBooking,
@@ -31,12 +34,22 @@ import {
 import { BookingRestaurantInList } from '../components/BookingRestaurant';
 import { formatVNDate } from '../utils/utils';
 import { setIndex, setStatusToIndex, StatusState } from '../slice/statusSlice';
+import { Loading } from '../components/Loading';
 
 type TripScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Trip'>;
 };
 
 const TripScreen = ({ navigation }: TripScreenProps) => {
+  useEffect(() => {
+    const start = performance.now();
+    return () => {
+      console.log(
+        `[TripScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+      );
+    };
+  }, []);
+
   const dispatch = useDispatch();
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
@@ -55,6 +68,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       state.restaurantBooking,
   );
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
   const [selectedStatus, setSelectedStatus] = useState<number>(0);
   const [selectedDiscovery, setSelectedDiscovery] = useState<number>(0);
   const [showModal1, setShowModal1] = useState(false);
@@ -63,6 +78,9 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     start: string;
     end: string;
   } | null>(null);
+  const [loadingHotel, setLoadingHotel] = useState(true);
+
+  const [loadingRestaurant, setLoadingRestaurant] = useState(true);
 
   // Status configuration
   const statusConfig = [
@@ -107,62 +125,87 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     },
   ];
 
+  const fetchHotelBooking = async () => {
+    await fetch(`${API_URL}/booking/getBookingHotel/${userInfo.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        dispatch(setHotelBooking(res.data));
+        setLoadingHotel(false);
+      })
+      .catch(err => {
+        console.error('Error fetching bookings:', err);
+      });
+  };
+
+  const fetchRestaurantBooking = async () => {
+    await fetch(`${API_URL}/booking/getBookingRestaurant/${userInfo.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        dispatch(setRestaurantBooking(res.data));
+        setLoadingRestaurant(false);
+      })
+      .catch(err => {
+        console.error('Error fetching bookings:', err);
+      });
+  };
+
+  const fetchStatus = async (type: number) => {
+    await fetch(`${API_URL}/booking/getStatus/${type}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        dispatch(setIndex(type));
+        dispatch(setStatusToIndex(res.data));
+      });
+  };
+
   useEffect(() => {
-    const fetchHotelBooking = async () => {
-      await fetch(`${API_URL}/booking/getBookingHotel/${userInfo.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(res => {
-          dispatch(setHotelBooking(res.data));
-        })
-        .catch(err => {
-          console.error('Error fetching bookings:', err);
-        });
-    };
-
-    const fetchRestaurantBooking = async () => {
-      await fetch(`${API_URL}/booking/getBookingRestaurant/${userInfo.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(res => {
-          dispatch(setRestaurantBooking(res.data));
-        })
-        .catch(err => {
-          console.error('Error fetching bookings:', err);
-        });
-    };
-
-    const fetchStatus = async (type: number) => {
-      await fetch(`${API_URL}/booking/getStatus/${type}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(res => res.json())
-        .then(res => {
-          dispatch(setIndex(type));
-          dispatch(setStatusToIndex(res.data));
-        });
-    };
-
-    if (isNeedFetchHotel && isLogin) {
+    if (
+      isNeedFetchHotel &&
+      isLogin &&
+      discoveryConfig[selectedDiscovery].types.includes(1)
+    ) {
+      setLoadingHotel(true);
       fetchHotelBooking();
       fetchStatus(1);
     }
-    if (isNeedFetchRestaurant && isLogin) {
+    if (
+      isNeedFetchRestaurant &&
+      isLogin &&
+      discoveryConfig[selectedDiscovery].types.includes(2)
+    ) {
+      setLoadingRestaurant(true);
       fetchRestaurantBooking();
       fetchStatus(2);
     }
-    console.log('statusInfo:', statusInfo[1]);
+  }, [
+    isNeedFetchHotel,
+    isNeedFetchRestaurant,
+    selectedStatus,
+    selectedDiscovery,
+  ]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    dispatch(clearHotelBooking());
+    dispatch(clearRestaurantBooking());
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
   }, []);
 
   const filteredBookings = [...hotel_bookings, ...restaurant_bookings]
@@ -226,7 +269,11 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
                 styles.statusTab,
                 selectedStatus === status.id && styles.activeStatusTab,
               ]}
-              onPress={() => setSelectedStatus(status.id)}
+              onPress={() => {
+                setSelectedStatus(status.id);
+                dispatch(clearHotelBooking());
+                dispatch(clearRestaurantBooking());
+              }}
             >
               <Text
                 style={[
@@ -249,7 +296,11 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
           {discoveryConfig.map(discovery => (
             <TouchableOpacity
               key={discovery.id}
-              onPress={() => setSelectedDiscovery(discovery.id)}
+              onPress={() => {
+                setSelectedDiscovery(discovery.id);
+                dispatch(clearHotelBooking());
+                dispatch(clearRestaurantBooking());
+              }}
               style={[
                 styles.discoveryItem,
                 selectedDiscovery === discovery.id &&
@@ -284,8 +335,13 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        {!isLogin || filteredBookings.length === 0 ? (
+        {loadingHotel || loadingRestaurant ? (
+          <Loading />
+        ) : !isLogin || filteredBookings.length === 0 ? (
           <View style={styles.emptyState}>
             <Image
               source={require('../../assets/img/img-trip.png')}

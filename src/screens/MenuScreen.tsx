@@ -23,6 +23,15 @@ type MenuScreenProps = {
 };
 
 const MenuScreen = ({ navigation }: MenuScreenProps) => {
+  useEffect(() => {
+    const start = performance.now();
+    return () => {
+      console.log(
+        `[MenuScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+      );
+    };
+  }, []);
+
   const dispatch = useDispatch();
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,

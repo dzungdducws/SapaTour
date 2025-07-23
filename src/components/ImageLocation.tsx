@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
 type ImageLocationProps = {
@@ -8,7 +8,7 @@ type ImageLocationProps = {
   image: string;
 };
 
-export const ImageLocation: React.FC<ImageLocationProps> = ({
+const ImageLocation: React.FC<ImageLocationProps> = ({
   rate,
   name,
   location,
@@ -103,3 +103,5 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
+export default memo(ImageLocation);

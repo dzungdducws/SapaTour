@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
 
 type CardImageLocationProps = {
@@ -8,7 +8,7 @@ type CardImageLocationProps = {
   image: string;
 };
 
-export const CardImageLocation: React.FC<CardImageLocationProps> = ({
+const CardImageLocation: React.FC<CardImageLocationProps> = ({
   rate,
   name,
   location,
@@ -103,3 +103,5 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
 });
+
+export default memo(CardImageLocation);

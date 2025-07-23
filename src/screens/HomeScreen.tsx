@@ -10,28 +10,38 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  useAnimatedValue,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { CusItemMenu } from '../components/CusItemMenu';
-import { ImageLocation } from '../components/ImageLocation';
-import { CardImageLocation } from '../components/CardImageLocation';
-import { CardImage } from '../components/CardImage';
 import { FooterMenu } from '../components/FooterMenu';
 import { Header } from '../components/Header';
 
-import { API_URL } from '../const/const';
+import { Menu, discovery_location, discovery_location_after } from '../dataraw';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { LocationState, setLocation } from '../slice/locationSlice';
-import { HomeState, setisLoaded } from '../slice/homeSlice';
 import {
   Restaurant,
   RestaurantState,
   setRestaurant,
 } from '../slice/restaurantSlice';
 import { Hotel, HotelState, setHotel } from '../slice/hotelSlice';
+import { Loading } from '../components/Loading';
+
+import container from '../dependencies/dependencies';
+import { HotelService } from '../services/hotelService';
+import { LocationService } from '../services/LocationService';
+import { RestaurantService } from '../services/RestaurantService';
+
+import { ImageLocal } from '../dataraw';
+import ImageLocationList from '../components/ImageLocationList';
+import CardImageList from '../components/CardImageList';
+import CardImageLocationList from '../components/CardImageLocationList';
+import ScrollViewHorizontalHome from '../components/ScrollViewHorizontalHome';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -40,132 +50,107 @@ type HomeScreenProps = {
 const { width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const Menu = [
-    {
-      sourceIcon: 'Map-Point',
-      Title: 'Địa điểm\ndu lịch',
-      colorBg: '#EEF4FA',
-    },
-    {
-      sourceIcon: 'Building',
-      Title: 'Địa điểm\nẩm thực',
-      colorBg: '#FBEEEE',
-    },
-    {
-      sourceIcon: 'buildings-2',
-      Title: 'Địa điểm\nnghỉ dưỡng',
-      colorBg: '#EBF6EA',
-    },
-    {
-      sourceIcon: 'shopping-cart',
-      Title: 'Gian hàng\ntrực tuyến',
-      colorBg: '#FDF2EA',
-    },
-    {
-      sourceIcon: 'fi_18472616',
-      Title: 'Tất cả\ndanh mục',
-      colorBg: '#F0F7E8',
-    },
-  ];
+  useEffect(() => {
+    const start = performance.now();
+    return () => {
+      console.log(
+        `[HomeScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+      );
+    };
+  }, []);
+  // const countRerender = useRef(0);
+  // countRerender.current++;
+  // console.log(`Rerender ${countRerender.current}`);
 
   const dispatch = useDispatch();
 
-  const { isLoaded } = useSelector((state: { home: HomeState }) => state.home);
-
-  const location = useSelector(
-    (state: { location: LocationState }) => state.location.locations,
+  const { isLoadedLocation, locations } = useSelector(
+    (state: { location: LocationState }) => state.location,
   );
 
-  const hotel = useSelector(
-    (state: { hotel: HotelState }) => state.hotel.hotels,
+  const { isLoadedHotel, hotels } = useSelector(
+    (state: { hotel: HotelState }) => state.hotel,
   );
 
-  const restaurant = useSelector(
-    (state: { restaurant: RestaurantState }) => state.restaurant.restaurants,
+  const { isLoadedRestaurant, restaurants } = useSelector(
+    (state: { restaurant: RestaurantState }) => state.restaurant,
   );
+
+  const hotelService = container.get<HotelService>('HotelService');
+  const restaurantService =
+    container.get<RestaurantService>('RestaurantService');
+  const locationService = container.get<LocationService>('LocationService');
+
+  const imageLocal = container.get<ImageLocal>('ImageLocal');
+
+  const fetchLocation = async () => {
+    const data = await locationService.getLocationList();
+
+    dispatch(setLocation(data.data));
+  };
+
+  const fetchHotel = async () => {
+    const data = await hotelService.getHotelList();
+
+    dispatch(setHotel(data.data));
+  };
+
+  const fetchRestaurant = async () => {
+    const data = await restaurantService.getRestaurantList();
+
+    dispatch(setRestaurant(data.data));
+  };
+
+  const [selectedLocationDiscovery, setSelectedLocationDiscovery] = useState(0);
+  const [selectedLocationDiscoveryAfter, setSelectedLocationDiscoveryAfter] =
+    useState(0);
+
+  const [listLocationDiscoveryAfter, setListLocationDiscoveryAfter] = useState<
+    (Hotel | Restaurant)[]
+  >([]);
 
   useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const res = await fetch(`${API_URL}/location/getLocation`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await res.json();
-        dispatch(setLocation(data.data));
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    console.log(selectedLocationDiscoveryAfter);
+  }, [selectedLocationDiscoveryAfter]);
 
-    const fetchHotel = async () => {
-      try {
-        const res = await fetch(`${API_URL}/hotel/getHotel`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await res.json();
-        dispatch(setHotel(data.data));
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const onSelectedLocationDiscoveryAfter = (index: number) => {
+    setSelectedLocationDiscoveryAfter(index);
+    switch (index) {
+      case 0:
+        setListLocationDiscoveryAfter([...hotels, ...restaurants]);
+        break;
+      case 1:
+        setListLocationDiscoveryAfter([...hotels]);
+        break;
+      case 2:
+        setListLocationDiscoveryAfter([...restaurants]);
+        break;
+    }
+  };
 
-    const fetchRestaurant = async () => {
-      try {
-        const res = await fetch(`${API_URL}/restaurant/getRestaurant`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await res.json();
-        dispatch(setRestaurant(data.data));
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  useEffect(() => {
+    if (!(isLoadedRestaurant && isLoadedLocation && isLoadedHotel)) {
+      console.log('call api');
 
-    if (!isLoaded) {
       fetchLocation();
       fetchHotel();
       fetchRestaurant();
-      dispatch(setisLoaded(true));
     }
-  }, []);
+  }, [isLoadedRestaurant && isLoadedLocation && isLoadedHotel]);
 
-  const discovery_location = [
-    'Tất cả',
-    'Danh lam thắng cảnh',
-    'Di tích lịch sử',
-    'Khu vui chơi giải trí',
-  ];
+  useEffect(() => {
+    onSelectedLocationDiscoveryAfter(selectedLocationDiscoveryAfter);
+  }, [hotels, restaurants, selectedLocationDiscoveryAfter]);
 
-  const discovery_location_after = ['Tất cả', 'Khách sạn', 'Nhà hàng'];
+  const fadeAnim = useAnimatedValue(0.3);
 
-  const [selected1, setSelected1] = useState(0);
-  const [selected2, setSelected2] = useState(0);
-  const _selected2: {
-    [key: number]: (Hotel | Restaurant)[];
-  } = {
-    0: [...hotel, ...restaurant],
-    1: [...hotel],
-    2: [...restaurant],
-  };
-  const icon_search = require('../../assets/img/icon/icon-search.png');
-  const right_chevron = require('../../assets/img/icon/right-chevron.png');
-  const courthouse = require('../../assets/img/icon/courthouse.png');
-  const hospital = require('../../assets/img/icon/hospital.png');
-
-  const banner1 = require('../../assets/img/banner/Banner-Home.png');
-  const banner2 = require('../../assets/img/banner/Banner-Home2.png');
-  const bg1 = require('../../assets/img/bg/bg_home_1.png');
-  const bg2 = require('../../assets/img/bg/bg_home_2.png');
-  const bg2_1 = require('../../assets/img/bg/bg_home_2-1.png');
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 3000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const HEADER_MAX_HEIGHT = 148;
@@ -187,12 +172,28 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return () => scrollY.removeListener(listenerId);
   }, []);
 
+  
+
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+      }}
+    >
       {/* header */}
       <Animated.View
         style={[
-          !showSearch && styles.header,
+          !showSearch && {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            overflow: 'hidden',
+            zIndex: 1,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
+          },
           {
             height: headerHeight,
             zIndex: 5,
@@ -202,7 +203,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {!showSearch && (
           <ImageBackground
             source={require('../../assets/img/bg/bg_home.png')}
-            style={styles.headerBackground}
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
             resizeMode="cover"
           />
         )}
@@ -212,7 +216,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <Animated.ScrollView
         style={{ zIndex: showSearch ? 4 : 6 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{
+          paddingBottom: 20,
+        }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false },
@@ -303,8 +309,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               },
             ]}
           >
-            <View style={styles.input}>
-              <Image source={icon_search} style={{ width: 24, height: 24 }} />
+            <View
+              style={{
+                height: 48,
+                borderBottomLeftRadius: 16,
+                borderBottomRightRadius: 16,
+                borderTopLeftRadius: 4,
+                borderTopRightRadius: 4,
+                marginTop: 16,
+                padding: 12,
+                backgroundColor: '#ffffff',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Image
+                source={imageLocal.icon_search}
+                style={{ width: 24, height: 24 }}
+              />
+
               <TextInput
                 placeholder="Tìm kiếm trên SaPa Tour"
                 placeholderTextColor="#919EAB"
@@ -316,7 +340,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* banner1 */}
         <View style={styles.section}>
           <Image
-            source={banner1}
+            source={imageLocal.banner1}
             style={{
               width: screenWidth - 32,
               height: (screenWidth / 3) * 2,
@@ -327,21 +351,46 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
         {/* Item */}
         <View style={[styles.section, { marginBottom: 0 }]}>
-          <View style={styles.menuContainer}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              gap: 12,
+            }}
+          >
             {Menu.map((item, index) => (
-              <CusItemMenu
+              <Animated.View
                 key={index}
-                index={index}
-                sourceIcon={item.sourceIcon}
-                Title={item.Title}
-                colorBg={item.colorBg}
-              />
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: fadeAnim,
+                  transform: [
+                    {
+                      translateY: fadeAnim.interpolate({
+                        inputRange: [item.s, 1],
+                        outputRange: [-50, 0],
+                      }),
+                    },
+                  ],
+                }}
+              >
+                <CusItemMenu
+                  index={index}
+                  sourceIcon={item.sourceIcon}
+                  Title={item.Title}
+                  colorBg={item.colorBg}
+                />
+              </Animated.View>
             ))}
           </View>
         </View>
         {/* Điểm đến được ưa chuộng nhất */}
         <ImageBackground
-          source={bg1}
+          source={imageLocal.bg1}
           style={{ width: '100%', paddingTop: 24 }}
           resizeMode="contain"
         >
@@ -357,24 +406,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             >
               Điểm đến được ưa chuộng nhất
             </Text>
-            <View style={styles.locationGrid}>
-              {location.map((item, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.locationItem,
-                    { width: index === 0 ? '100%' : '48%' },
-                  ]}
-                >
-                  <ImageLocation
-                    rate={item.rate}
-                    name={item.name}
-                    location={item.location}
-                    image={item.image}
-                  />
-                </View>
-              ))}
-            </View>
+            {!(isLoadedRestaurant && isLoadedLocation && isLoadedHotel) ? (
+              <Loading />
+            ) : (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  gap: 8,
+                }}
+              >
+                <ImageLocationList locations={locations} />
+              </View>
+            )}
+
             <View
               style={{
                 flexDirection: 'row',
@@ -395,7 +441,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 Xem thêm
               </Text>
               <Image
-                source={right_chevron}
+                source={imageLocal.right_chevron}
                 style={{ width: 18, height: 18 }}
               ></Image>
             </View>
@@ -404,7 +450,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* banner2 */}
         <View style={styles.section}>
           <Image
-            source={banner2}
+            source={imageLocal.banner2}
             style={{
               width: screenWidth - 32,
               height: screenWidth / 2,
@@ -446,57 +492,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </Text>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScroll}
-          >
-            {discovery_location.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setSelected1(index)}
-                style={{
-                  paddingHorizontal: 8,
-                  paddingVertical: 2,
-                  borderRadius: 50,
-                  backgroundColor:
-                    selected1 === index ? '#81BA41' : '#919EAB29',
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 22,
-                    fontWeight: 400,
-                    color: selected1 === index ? '#ffffff' : '#000000',
-                  }}
-                >
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <ScrollViewHorizontalHome
+            list={discovery_location}
+            indexOfChoose={selectedLocationDiscovery}
+            func={setSelectedLocationDiscovery}
+          />
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
-            {location.map((item, index) => (
-              <CardImageLocation
-                key={index}
-                rate={item.rate}
-                name={item.name}
-                location={item.location}
-                image={item.image}
-              />
-            ))}
+            <CardImageLocationList locations={locations} />
           </ScrollView>
         </View>
         {/* Tiện ích */}
         <View style={[styles.section, { paddingHorizontal: 0 }]}>
           <ImageBackground
-            source={bg2}
+            source={imageLocal.bg2}
             style={{ paddingTop: 24, paddingBottom: 22, paddingHorizontal: 16 }}
           >
             <ScrollView
@@ -524,7 +537,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   style={{}}
                 >
                   <ImageBackground
-                    source={bg2_1}
+                    source={imageLocal.bg2_1}
                     style={{
                       height: 190,
                       width: 200,
@@ -535,7 +548,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     }}
                   >
                     <Image
-                      source={courthouse}
+                      source={imageLocal.courthouse}
                       style={{
                         width: 48,
                         height: 48,
@@ -570,7 +583,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 }}
               >
                 <Image
-                  source={hospital}
+                  source={imageLocal.hospital}
                   style={{
                     width: 48,
                     height: 48,
@@ -623,61 +636,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </Text>
           </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScroll}
-          >
-            {discovery_location_after.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => setSelected2(index)}
-                style={{
-                  paddingHorizontal: 8,
-                  paddingVertical: 2,
-                  borderRadius: 50,
-                  backgroundColor:
-                    selected2 === index ? '#81BA41' : '#919EAB29',
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    lineHeight: 22,
-                    fontWeight: 400,
-                    color: selected2 === index ? '#ffffff' : '#000000',
-                  }}
-                >
-                  {item}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          <ScrollViewHorizontalHome
+            list={discovery_location_after}
+            indexOfChoose={selectedLocationDiscoveryAfter}
+            func={setSelectedLocationDiscoveryAfter}
+          />
 
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
-            {_selected2[selected2]
-              .sort((a, b) => b.rate - a.rate)
-              .map((item, index) => {
-                const isHotel = 'price' in item;
-
-                return (
-                  <CardImage
-                    key={index}
-                    star={isHotel ? item.star : -1}
-                    rate={item.rate}
-                    name={item.name}
-                    location={item.location}
-                    image={item.image}
-                    price={isHotel ? item.price : -1}
-                    time_open={!isHotel ? item.time_open : undefined}
-                    time_close={!isHotel ? item.time_close : undefined}
-                  />
-                );
-              })}
+            <CardImageList list={listLocationDiscoveryAfter} />
           </ScrollView>
         </View>
         <View style={{ height: 144 }} />
@@ -689,60 +659,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  input: {
-    height: 48,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#ffffff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    overflow: 'hidden',
-    zIndex: 1,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-  },
-  headerBackground: {
-    width: '100%',
-    height: '100%',
-  },
-  scrollContent: {
-    paddingBottom: 20,
-  },
   section: {
     marginBottom: 24,
     paddingHorizontal: 16,
     gap: 16,
-  },
-  menuContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 12,
-  },
-  locationGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  locationItem: {
-    marginBottom: 8,
   },
   horizontalScroll: {
     gap: 12,

@@ -11,6 +11,7 @@ import {
   Image,
   TouchableOpacity,
   useAnimatedValue,
+  FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -33,7 +34,7 @@ import { Hotel, HotelState, setHotel } from '../slice/hotelSlice';
 import { Loading } from '../components/Loading';
 
 import container from '../dependencies/dependencies';
-import { HotelService } from '../services/hotelService';
+import { HotelService } from '../services/HotelService';
 import { LocationService } from '../services/LocationService';
 import { RestaurantService } from '../services/RestaurantService';
 
@@ -42,6 +43,10 @@ import ImageLocationList from '../components/ImageLocationList';
 import CardImageList from '../components/CardImageList';
 import CardImageLocationList from '../components/CardImageLocationList';
 import ScrollViewHorizontalHome from '../components/ScrollViewHorizontalHome';
+import CardImageLocation from '../components/CardImageLocation';
+import CardImage from '../components/CardImage';
+import CardImageListV2 from '../components/CardImageListV2';
+import CardImageLocationListV2 from '../components/CardImageLocationListV2';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -171,8 +176,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
     return () => scrollY.removeListener(listenerId);
   }, []);
-
-  
 
   return (
     <View
@@ -340,7 +343,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* banner1 */}
         <View style={styles.section}>
           <Image
-            source={imageLocal.banner1}
+            source={{ uri: imageLocal.banner1 }}
             style={{
               width: screenWidth - 32,
               height: (screenWidth / 3) * 2,
@@ -450,7 +453,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         {/* banner2 */}
         <View style={styles.section}>
           <Image
-            source={imageLocal.banner2}
+            source={{ uri: imageLocal.banner2 }}
             style={{
               width: screenWidth - 32,
               height: screenWidth / 2,
@@ -498,13 +501,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             func={setSelectedLocationDiscovery}
           />
 
-          <ScrollView
+          {/* <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
             <CardImageLocationList locations={locations} />
-          </ScrollView>
+          </ScrollView> */}
+          <CardImageLocationListV2 locations={locations} />
         </View>
         {/* Tiện ích */}
         <View style={[styles.section, { paddingHorizontal: 0 }]}>
@@ -642,15 +646,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             func={setSelectedLocationDiscoveryAfter}
           />
 
-          <ScrollView
+          {/* <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalScroll}
           >
             <CardImageList list={listLocationDiscoveryAfter} />
-          </ScrollView>
+          </ScrollView> */}
+          <CardImageListV2 list={listLocationDiscoveryAfter} />
         </View>
-        <View style={{ height: 144 }} />
+        <View style={{ height: 75 }} />
       </Animated.ScrollView>
 
       <FooterMenu navigation={navigation} selected={'home'} />

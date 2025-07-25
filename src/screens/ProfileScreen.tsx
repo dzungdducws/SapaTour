@@ -195,7 +195,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
             </Text>
           </LinearGradient>
         </TouchableOpacity>
-        <View style={{ height: 120 }}></View>
+        <View style={{ height: 75 }} />
       </ScrollView>
     </View>
   );

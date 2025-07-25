@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, Modal } from 'react-native';
 
 type Props = {
@@ -11,9 +11,13 @@ export const ThongTinThanhToanModal: React.FC<Props> = ({
   visible,
   onClose,
 }) => {
+  useEffect(() => {
+    console.log('visible', visible);
+  }, [visible]);
   return (
     <Modal
       visible={visible}
+      style={{ zIndex: 100 }}
       transparent
       animationType="fade"
       onRequestClose={onClose}
@@ -24,7 +28,9 @@ export const ThongTinThanhToanModal: React.FC<Props> = ({
           backgroundColor: 'rgba(0,0,0,0.5)',
           justifyContent: 'center',
           alignItems: 'center',
-          zIndex: 9,
+          position:'absolute',
+          width:'100%',
+          height:'100%'
         }}
       >
         <View

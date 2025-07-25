@@ -55,10 +55,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     (state: { user: UserState }) => state.user,
   );
 
-  const { statusInfo } = useSelector(
-    (state: { status: StatusState }) => state.status,
-  );
-
   const { isNeedFetchHotel, hotel_bookings } = useSelector(
     (state: { hotelBooking: HotelBookingState }) => state.hotelBooking,
   );
@@ -78,9 +74,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     start: string;
     end: string;
   } | null>(null);
-  const [loadingHotel, setLoadingHotel] = useState(true);
-
-  const [loadingRestaurant, setLoadingRestaurant] = useState(true);
+  const [loadingHotel, setLoadingHotel] = useState(false);
+  const [loadingRestaurant, setLoadingRestaurant] = useState(false);
 
   // Status configuration
   const statusConfig = [
@@ -174,6 +169,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
   };
 
   useEffect(() => {
+    console.log(userInfo);
+
     if (
       isNeedFetchHotel &&
       isLogin &&
@@ -205,7 +202,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     dispatch(clearRestaurantBooking());
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 1000);
   }, []);
 
   const filteredBookings = [...hotel_bookings, ...restaurant_bookings]
@@ -224,7 +221,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       );
       return statusMatch && typeMatch;
     });
-
   const handleLogout = () => {
     dispatch(logout());
     navigation.reset({
@@ -403,7 +399,9 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
                 <BookingHotelInList
                   key={booking.id}
                   navigation={navigation}
-                  onPressThongTinThanhToan={() => setShowModal2(true)}
+                  onPressThongTinThanhToan={() => {
+                    setShowModal2(true);
+                  }}
                   item={booking as HotelBooking}
                 />
               ) : (

@@ -19,6 +19,8 @@ import { login } from '../../slice/userSlice';
 
 import { RootStackParamList } from '../../types';
 import { API_URL } from '../../const/const';
+import { clearHotelBooking } from '../../slice/hotelBookingSlice';
+import { clearRestaurantBooking } from '../../slice/restaurantBookingSlice';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -93,6 +95,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
+    dispatch(clearRestaurantBooking());
+    dispatch(clearHotelBooking());   
+
     let { uri: uri_1 } = Image.resolveAssetSource(imageSource_1);
     Image.getSize(uri_1, (imgWidth, imgHeight) => {
       const ratio = imgHeight / imgWidth;

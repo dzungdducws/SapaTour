@@ -624,8 +624,8 @@ export class ImageLocal {
   right_chevron = require('../assets/img/icon/right-chevron.png');
   courthouse = require('../assets/img/icon/courthouse.png');
   hospital = require('../assets/img/icon/hospital.png');
-  banner1 = require('../assets/img/banner/Banner-Home.png');
-  banner2 = require('../assets/img/banner/Banner-Home2.png');
+  banner1 = "https://res.cloudinary.com/dmkgsuq2n/image/upload/v1753407085/sapatour/img-sptour/banner/Banner-Home_gm9js9.png";
+  banner2 = "https://res.cloudinary.com/dmkgsuq2n/image/upload/v1753407084/sapatour/img-sptour/banner/Banner-Home2_z7gh36.png";
   bg1 = require('../assets/img/bg/bg_home_1.png');
   bg2 = require('../assets/img/bg/bg_home_2.png');
   bg2_1 = require('../assets/img/bg/bg_home_2-1.png');

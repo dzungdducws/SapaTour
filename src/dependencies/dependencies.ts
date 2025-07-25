@@ -1,5 +1,5 @@
 import { Container } from 'inversify';
-import { HotelService } from '../services/hotelService';
+import { HotelService } from '../services/HotelService';
 import { RestaurantService } from '../services/RestaurantService';
 import { LocationService } from '../services/LocationService';
 import { ImageLocal } from '../dataraw';

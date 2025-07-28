@@ -21,6 +21,7 @@ import { RootStackParamList } from '../../types';
 import { API_URL } from '../../const/const';
 import { clearHotelBooking } from '../../slice/hotelBookingSlice';
 import { clearRestaurantBooking } from '../../slice/restaurantBookingSlice';
+import { AppDispatch } from '../../store';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -40,7 +41,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [emailOrPhoneNumber, setEmailOrPhoneNumber] =
     useState('user@gmail.com');
   const [password, setPassword] = useState('12345678');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();;
 
   const fadeAnim = useAnimatedValue(0);
 
@@ -95,9 +96,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    dispatch(clearRestaurantBooking());
-    dispatch(clearHotelBooking());   
-
     let { uri: uri_1 } = Image.resolveAssetSource(imageSource_1);
     Image.getSize(uri_1, (imgWidth, imgHeight) => {
       const ratio = imgHeight / imgWidth;

@@ -6,10 +6,13 @@ import { store } from './src/store';
 import { Provider } from 'react-redux';
 
 const App = () => {
+  if (__DEV__) {
+    require('./src/devtools/ReactotronConfig');
+  }
   return (
     <Provider store={store}>
       <NavigationContainer>
-          <AppNavigator />
+        <AppNavigator />
       </NavigationContainer>
     </Provider>
   );

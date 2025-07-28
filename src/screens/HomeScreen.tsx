@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import {
   Text,
   View,
@@ -11,7 +11,6 @@ import {
   Image,
   TouchableOpacity,
   useAnimatedValue,
-  FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -40,13 +39,11 @@ import { RestaurantService } from '../services/RestaurantService';
 
 import { ImageLocal } from '../dataraw';
 import ImageLocationList from '../components/ImageLocationList';
-import CardImageList from '../components/CardImageList';
-import CardImageLocationList from '../components/CardImageLocationList';
 import ScrollViewHorizontalHome from '../components/ScrollViewHorizontalHome';
-import CardImageLocation from '../components/CardImageLocation';
-import CardImage from '../components/CardImage';
 import CardImageListV2 from '../components/CardImageListV2';
 import CardImageLocationListV2 from '../components/CardImageLocationListV2';
+import { AppDispatch } from '../store';
+import { logoutThunk } from '../slice/userSlice';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -67,7 +64,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   // countRerender.current++;
   // console.log(`Rerender ${countRerender.current}`);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { isLoadedLocation, locations } = useSelector(
     (state: { location: LocationState }) => state.location,
@@ -114,10 +111,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     (Hotel | Restaurant)[]
   >([]);
 
-  useEffect(() => {
-    console.log(selectedLocationDiscoveryAfter);
-  }, [selectedLocationDiscoveryAfter]);
-
   const onSelectedLocationDiscoveryAfter = (index: number) => {
     setSelectedLocationDiscoveryAfter(index);
     switch (index) {
@@ -135,8 +128,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (!(isLoadedRestaurant && isLoadedLocation && isLoadedHotel)) {
-      console.log('call api');
-
       fetchLocation();
       fetchHotel();
       fetchRestaurant();
@@ -177,6 +168,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return () => scrollY.removeListener(listenerId);
   }, []);
 
+  const [startTime] = useState(Date.now());
+
+  useEffect(() => {
+    const renderTime = Date.now() - startTime;
+    console.log(`Render time: ${renderTime}ms`);
+  }, []);
+
   return (
     <View
       style={{
@@ -215,7 +213,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
         {showSearch && <Header navigation={navigation}></Header>}
       </Animated.View>
-
       <Animated.ScrollView
         style={{ zIndex: showSearch ? 4 : 6 }}
         showsVerticalScrollIndicator={false}
@@ -293,7 +290,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 source={require('../../assets/img/icon/Cart.png')}
                 style={{ height: 24, width: 24, marginRight: 12 }}
               ></Image>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(logoutThunk());
+
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                  });
+                }}
+              >
                 <Image
                   source={require('../../assets/img/icon/Noti.png')}
                   style={{ height: 24, width: 24 }}

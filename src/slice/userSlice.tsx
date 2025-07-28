@@ -1,5 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  createSlice,
+  Dispatch,
+  ThunkAction,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { clearRestaurantBooking } from './restaurantBookingSlice';
+import { clearHotelBooking } from './hotelBookingSlice';
+import { AppDispatch, RootState } from '../store';
 
 export interface UserInfo {
   id: string;
@@ -60,6 +69,19 @@ const userSlice = createSlice({
     },
   },
 });
+
+export const logoutThunk = (): ThunkAction<
+  void,
+  RootState,
+  unknown,
+  AnyAction
+> => {
+  return (dispatch, getState) => {
+    dispatch(logout()); // từ createSlice
+    dispatch(clearHotelBooking());
+    dispatch(clearRestaurantBooking());
+  };
+};
 
 export const { login, logout } = userSlice.actions;
 export default userSlice.reducer;

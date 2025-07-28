@@ -16,8 +16,8 @@ import { RangePickerModal } from '../components/RangePickerModal';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { BookingHotelInList } from '../components/BookingHotel';
-import { UserState, logout } from '../slice/userSlice';
+import { BookingHotelInList } from '../components/BookingHotelInList';
+import { UserState, logout, logoutThunk } from '../slice/userSlice';
 import {
   clearHotelBooking,
   HotelBooking,
@@ -31,10 +31,11 @@ import {
   RestaurantBookingState,
   setRestaurantBooking,
 } from '../slice/restaurantBookingSlice';
-import { BookingRestaurantInList } from '../components/BookingRestaurant';
+import { BookingRestaurantInList } from '../components/BookingRestaurantInList';
 import { formatVNDate } from '../utils/utils';
 import { setIndex, setStatusToIndex, StatusState } from '../slice/statusSlice';
 import { Loading } from '../components/Loading';
+import { AppDispatch } from '../store';
 
 type TripScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Trip'>;
@@ -50,7 +51,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     };
   }, []);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();;
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -169,7 +170,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
   };
 
   useEffect(() => {
-    console.log(userInfo);
 
     if (
       isNeedFetchHotel &&
@@ -222,7 +222,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       return statusMatch && typeMatch;
     });
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logoutThunk());;
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],

@@ -8,6 +8,13 @@ import hotelBookingSlice from './slice/hotelBookingSlice';
 import restaurantBookingSlice from './slice/restaurantBookingSlice';
 import statusSlice from './slice/statusSlice';
 
+let enhancers: any[] = [];
+
+if (__DEV__) {
+  const reactotron = require('./devtools/ReactotronConfig').default;
+  enhancers.push(reactotron.createEnhancer());
+}
+
 export const store = configureStore({
   reducer: {
     home: homeSlice,
@@ -19,6 +26,8 @@ export const store = configureStore({
     restaurantBooking: restaurantBookingSlice,
     status: statusSlice,
   },
+  // middleware: getDefaultMiddleware => getDefaultMiddleware(),
+  enhancers: getDefaultEnhancers => getDefaultEnhancers().concat(enhancers),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

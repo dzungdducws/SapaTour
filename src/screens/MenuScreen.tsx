@@ -15,10 +15,11 @@ import { ItemMenu } from '../components/ItemMenu';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { UserState } from '../slice/userSlice';
+import { logoutThunk, UserState } from '../slice/userSlice';
 import { logout } from '../slice/userSlice';
 import { clearHotelBooking } from '../slice/hotelBookingSlice';
 import { clearRestaurantBooking } from '../slice/restaurantBookingSlice';
+import { AppDispatch } from '../store';
 
 type MenuScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Menu'>;
@@ -34,7 +35,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
     };
   }, []);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();;
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -247,7 +248,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
                   marginTop: 16,
                 }}
                 onPress={() => {
-                  dispatch(logout());
+                  dispatch(logoutThunk());;
                   dispatch(clearRestaurantBooking());
                   dispatch(clearHotelBooking());
                   navigation.reset({
@@ -316,7 +317,7 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
               margin: 16,
             }}
             onPress={() => {
-              dispatch(logout());
+              dispatch(logoutThunk());;
               navigation.reset({
                 index: 0,
                 routes: [{ name: 'Login' }],

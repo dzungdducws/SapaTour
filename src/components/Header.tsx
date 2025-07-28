@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { RootStackParamList } from '../types';
-import { logout } from '../slice/userSlice';
+import { logout, logoutThunk } from '../slice/userSlice';
 import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store';
 
 type HeaderProps = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -22,7 +23,7 @@ export const Header: React.FC<HeaderProps> = ({ navigation }) => {
   const icon_noti = require('../../assets/img/icon/Noti.png');
   const bg_header = require('../../assets/img/bg/bg_header.png');
 
-  const dispatch = useDispatch();
+const dispatch = useDispatch<AppDispatch>();
 
   return (
     <ImageBackground source={bg_header} style={styles.container}>
@@ -41,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({ navigation }) => {
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => {
-            dispatch(logout());
+            dispatch(logoutThunk());
 
             navigation.reset({
               index: 0,

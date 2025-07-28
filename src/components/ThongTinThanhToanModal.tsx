@@ -11,9 +11,6 @@ export const ThongTinThanhToanModal: React.FC<Props> = ({
   visible,
   onClose,
 }) => {
-  useEffect(() => {
-    console.log('visible', visible);
-  }, [visible]);
   return (
     <Modal
       visible={visible}

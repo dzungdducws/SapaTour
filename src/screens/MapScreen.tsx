@@ -4,7 +4,7 @@ import { FooterMenu } from '../components/FooterMenu';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { Header } from '../components/Header';
-import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
+import { InformationPayModal } from '../components/InformationPayModal';
 
 type MapScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Map'>;
@@ -31,7 +31,7 @@ const MapScreen = ({ navigation }: MapScreenProps) => {
           setShowModal2(true);
         }}
       />
-      <ThongTinThanhToanModal
+      <InformationPayModal
         visible={showModal2}
         onClose={() => setShowModal2(false)}
       />

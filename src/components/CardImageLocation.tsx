@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { View, StyleSheet, ImageBackground, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 
 type CardImageLocationProps = {
   rate: number;

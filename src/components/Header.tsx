@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import { RootStackParamList } from '../types';
-import { logout, logoutThunk } from '../slice/userSlice';
+import { logoutThunk } from '../slice/userSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { useTranslation } from 'react-i18next';

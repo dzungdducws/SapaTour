@@ -12,12 +12,8 @@ type ItemMenuProps = {
 };
 
 export const ItemMenu: React.FC<ItemMenuProps> = ({
-  navigation,
   icon,
   text,
-  detail,
-  mustLogin,
-  isLogin,
 }) => {
   const caret_right = require('../../assets/img/icon/caret-right.png');
   const handlePress = () => {

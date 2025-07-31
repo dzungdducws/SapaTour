@@ -2,12 +2,9 @@ import React from 'react';
 import {
   Text,
   View,
-  Button,
   Image,
   ImageBackground,
-  TextInput,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';

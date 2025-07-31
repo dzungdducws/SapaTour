@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
+import { InformationPayModal } from '../components/InformationPayModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../slice/userSlice';
 import { formatVNDate } from '../utils/utils';
@@ -817,12 +816,12 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
           </TouchableOpacity>
         )}
       </ScrollView>
-      <ThongTinThanhToanModal
+      <InformationPayModal
         visible={visible}
         onClose={() => {
           setVisible(false);
         }}
-      ></ThongTinThanhToanModal>
+      ></InformationPayModal>
     </View>
   );
 };

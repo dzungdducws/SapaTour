@@ -7,7 +7,7 @@ type Props = {
   onClose: () => void;
 };
 
-export const ThongTinThanhToanModal: React.FC<Props> = ({
+export const InformationPayModal: React.FC<Props> = ({
   visible,
   onClose,
 }) => {

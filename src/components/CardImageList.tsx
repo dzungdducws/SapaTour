@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import { Hotel } from '../slice/hotelSlice';
 import { Restaurant } from '../slice/restaurantSlice';
 import CardImage from './CardImage';

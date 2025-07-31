@@ -14,10 +14,10 @@ import { RootStackParamList } from '../types';
 import { Header } from '../components/Header';
 import { RangePickerModal } from '../components/RangePickerModal';
 import LinearGradient from 'react-native-linear-gradient';
-import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
+import { InformationPayModal } from '../components/InformationPayModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { BookingHotelInList } from '../components/BookingHotelInList';
-import { UserState, logout, logoutThunk } from '../slice/userSlice';
+import { UserState, logoutThunk } from '../slice/userSlice';
 import {
   clearHotelBookings,
   HotelBooking,
@@ -33,7 +33,7 @@ import {
 } from '../slice/restaurantBookingSlice';
 import { BookingRestaurantInList } from '../components/BookingRestaurantInList';
 import { formatVNDate } from '../utils/utils';
-import { setIndex, setStatusToIndex, StatusState } from '../slice/statusSlice';
+import { setIndex, setStatusToIndex } from '../slice/statusSlice';
 import { Loading } from '../components/Loading';
 import { AppDispatch } from '../store';
 
@@ -429,7 +429,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
         }}
       />
 
-      <ThongTinThanhToanModal
+      <InformationPayModal
         visible={showModal2}
         onClose={() => setShowModal2(false)}
       />

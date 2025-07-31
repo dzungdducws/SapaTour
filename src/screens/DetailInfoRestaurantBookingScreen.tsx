@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
+import { InformationPayModal } from '../components/InformationPayModal';
 import { formatVNDate } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../slice/userSlice';
@@ -715,12 +714,12 @@ const DetailInfoRestaurantBookingScreen: React.FC<
           </TouchableOpacity>
         )}
       </ScrollView>
-      <ThongTinThanhToanModal
+      <InformationPayModal
         visible={visible}
         onClose={() => {
           setVisible(false);
         }}
-      ></ThongTinThanhToanModal>
+      ></InformationPayModal>
     </View>
   );
 };

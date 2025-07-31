@@ -17,7 +17,6 @@ export const BookingRestaurantInList: React.FC<Props> = ({
   item,
 }) => {
   const dispatch = useDispatch();
-  const { bill } = item;
 
   return (
     <View

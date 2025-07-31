@@ -1,0 +1,87 @@
+{
+    "lang": "en",
+    "screen": {
+        "login": {
+            "label": {
+                "emailOrPhoneNumber": "Email/ Phone number",
+                "password": "Password",
+                "forgetPassword": "Forget password",
+                "haveAccount": "Have account?",
+                "skip": "Skip",
+                "register": "Register"
+            },
+            "button": {
+                "login": "Login"
+            },
+            "inputHolder": {
+                "emailOrPhoneNumber": "Enter email or phone number",
+                "password": "Enter password"
+            }
+        },
+        "forgetPassword": {
+            "label": {
+                "title": "Forget password",
+                "subTitle": "Please enter your email to get reset password link"
+            },
+            "inputHolder": {
+                "email": "Enter email"
+            },
+            "button": {
+                "confirm": "Confirm"
+            }
+        },
+        "register": {
+            "label": {
+                "title": "Register",
+                "fullName": "Full name",
+                "email": "Email",
+                "phoneNumber": "Phone number",
+                "password": "Password",
+                "confirmPassword": "Confirm password",
+                "businessRegistration": "Business registration",
+                "agreeTerms": "I have read and agree with the ",
+                "termsOfUse": "Terms of use",
+                "businessLicense": "Business license",
+                "registrationObject": "Registration object",
+                "IDfront": "Image front ID card",
+                "IDback": "Image back ID card"
+            },
+            "inputHolder": {
+                "fullName": "Enter full name",
+                "email": "Enter email",
+                "phoneNumber": "Enter phone number",
+                "password": "Enter password",
+                "confirmPassword": "Enter re-password",
+                "businessLicense": "Select business license",
+                "registrationObject": "Select registration object",
+                "IDfront": "Upload image front ID card",
+                "IDback": "Upload image back ID card"
+            },
+            "button": {
+                "register": "Register"
+            },
+            "option": {
+                "individual": "individual",
+                "organization": "organization",
+                "business": "business"
+            }
+        }
+    },
+    "component": {
+        "loading": {
+            "title": "Loading..."
+        },
+        "header": {
+            "placeholder": "Seacrh on SapaTour"
+        },
+        "footer": {
+            "label": {
+                "Home": "Home",
+                "Map": "Map",
+                "Trip": "Trip",
+                "Menu": "Menu",
+                "Travel itinerary": "Travel itinerary"
+            }
+        }
+    }
+}

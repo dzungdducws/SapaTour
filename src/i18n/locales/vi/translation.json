@@ -1,0 +1,87 @@
+{
+    "lang": "vi",
+    "screen": {
+        "login": {
+            "label": {
+                "emailOrPhoneNumber": "Email/ Số điện thoại",
+                "password": "Mật khẩu",
+                "forgetPassword": "Quên mật khẩu",
+                "haveAccount": "Bạn đã có tài khoản?",
+                "skip": "Bỏ qua",
+                "register": "Đăng ký"
+            },
+            "button": {
+                "login": "Đăng nhập"
+            },
+            "inputHolder": {
+                "emailOrPhoneNumber": "Nhập emal hoặc số điện thoại",
+                "password": "Nhập mật khẩu"
+            }
+        },
+        "forgetPassword": {
+            "label": {
+                "title": "Quên mật khẩu",
+                "subTitle": "Vui lòng nhập thông tin tài khoản để thực hiện cung cấp mật khẩu mới!"
+            },
+            "inputHolder": {
+                "email": "Nhập email"
+            },
+            "button": {
+                "confirm": "Xác nhận"
+            }
+        },
+        "register": {
+            "label": {
+                "title": "Đăng ký",
+                "fullName": "Họ tên",
+                "email": "Email",
+                "phoneNumber": "Số điện thoại",
+                "password": "Mật khẩu",
+                "confirmPassword": "Xác nhận mật khẩu",
+                "businessRegistration": "Đăng ký kinh doanh",
+                "agreeTerms": "Bạn đã đọc và đồng ý với các ",
+                "termsOfUse": "Điều khoản sử dụng",
+                "businessLicense": "Giấy phép kinh doanh",
+                "registrationObject": "Đổi tượng đăng ký",
+                "IDfront": "Hình ảnh mặt trước CCCD/CMT",
+                "IDback": "Hình ảnh mặt sau CCCD/CMT"
+            },
+            "inputHolder": {
+                "fullName": "Nhập họ tên",
+                "email": "Nhập email",
+                "phoneNumber": "Nhập số điện thoại",
+                "password": "Nhập mật khẩu",
+                "confirmPassword": "Nhập lại mật khẩu",
+                "businessLicense": "Chọn loại giấy phép đăng ký",
+                "registrationObject": "Chọn đối tượng đăng ký",
+                "IDfront": "Tải lên ảnh mặt trước CCCD/CMT",
+                "IDback": "Tải lên ảnh mặt sau CCCD/CMT"
+            },
+            "button": {
+                "register": "Đăng ký"
+            },
+            "option": {
+                "individual": "Cá nhân",
+                "organization": "Công ty",
+                "business": "Kinh doanh"
+            }
+        }
+    },
+    "component": {
+        "loading": {
+            "title": "Đang tải..."
+        },
+        "header": {
+            "placeholder": "Tìm kiếm trên SapaTour"
+        },
+        "footer": {
+            "label": {
+                "Home": "Trang chủ",
+                "Map": "Bản đồ",
+                "Trip": "Chuyển đi",
+                "Menu": "Mục lục",
+                "Travel itinerary": "Lộ trình du lịch"
+            }
+        }
+    }
+}

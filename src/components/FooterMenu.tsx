@@ -14,6 +14,7 @@ import { RootStackParamList } from '../types';
 import { ImageLocal } from '../dataraw';
 import container from '../dependencies/dependencies';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 type FooterMenuProps = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -24,6 +25,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
   navigation,
   selected,
 }) => {
+  const {t} = useTranslation();
   const startTimeRef = useRef<number>(performance.now());
   const imageLocal = container.get<ImageLocal>('ImageLocal');
 
@@ -70,7 +72,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
             navigation.navigate('Home');
           }}
           icon={imageLocal.homeIcon}
-          label="Trang chủ"
+          label={t('component.footer.label.Home')}
           isSeletcted={selected === 'home'}
         />
         <TabItem
@@ -78,7 +80,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
             navigation.navigate('Map');
           }}
           icon={imageLocal.mapIcon}
-          label="Bản đồ"
+          label={t('component.footer.label.Map')}
           isSeletcted={selected === 'map'}
         />
 
@@ -89,7 +91,7 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
             navigation.navigate('Trip');
           }}
           icon={imageLocal.tripIcon}
-          label="Chuyến đi"
+          label={t('component.footer.label.Trip')}
           isSeletcted={selected === 'trip'}
         />
         <TabItem
@@ -97,14 +99,14 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
             navigation.navigate('Menu');
           }}
           icon={imageLocal.menuIcon}
-          label="Menu"
+          label={t('component.footer.label.Menu')}
           isSeletcted={selected === 'menu'}
         />
       </View>
 
       <TouchableOpacity style={styles.centerButton}>
         <Image source={imageLocal.logoMain} style={{ width: 46, height: 46 }} />
-        <Text style={styles.centerLabel}>Lộ trình du lịch</Text>
+        <Text style={styles.centerLabel}>{t('component.footer.label.Travel itinerary')}</Text>
       </TouchableOpacity>
     </View>
   );

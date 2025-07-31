@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import {
   Image,
   ImageBackground,
@@ -18,6 +18,7 @@ import { CusImagePicker } from '../../components/CusImagePicker';
 import LinearGradient from 'react-native-linear-gradient';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types';
+import { useTranslation } from 'react-i18next';
 const { width: screenWidth } = Dimensions.get('window');
 
 type RegisterScreenProps = {
@@ -26,11 +27,12 @@ type RegisterScreenProps = {
 
 const imageSource_1 = require('../../../assets/img/bg/bg_dangky.png');
 const iconLeftChevron = require('../../../assets/img/icon/icon-left-chevron.png');
-const iconDownChevron = require('../../../assets/img/icon/icon-down-chevron.png');
 const iconEye = require('../../../assets/img/icon/icon-eye.png');
 const iconEyeOff = require('../../../assets/img/icon/icon-eye-off.png');
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const {t} = useTranslation()
+  
   const [imageHeight, setImageHeight] = useState(200); // placeholder
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
@@ -47,9 +49,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [objectSelected, setObjectSelected] = useState({ id: '', name: '' });
 
   const [objectList, setObjectList] = useState([
-    { id: '1', name: 'Cá nhân' },
-    { id: '2', name: 'Doanh nghiệp' },
-    { id: '3', name: 'Tổ chức' },
+    { id: '1', name: t('screen.register.option.individual') },
+    { id: '2', name: t('screen.register.option.organization') },
+    { id: '3', name: t('screen.register.option.business') },
   ]);
 
   const [checked, setChecked] = useState(false);
@@ -87,7 +89,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         <TouchableOpacity onPress={() => handleBackPress()}>
           <Image source={iconLeftChevron} style={styles.iconLeftChevron} />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>Đăng ký </Text>
+        <Text style={styles.textHeader}>{t('screen.register.label.title')}</Text>
       </View>
 
       <ImageBackground
@@ -113,36 +115,36 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
         <View style={{ padding: 16, width: '100%', gap: 16 }}>
           <View style={{ gap: 8 }}>
             <Text style={{ color: 'white' }}>
-              Họ tên <Text>*</Text>
+              {t('screen.register.label.fullName')} <Text>*</Text>
             </Text>
             <TextInput
-              placeholder="Nhập email hoặc số điện thoại"
+              placeholder={t('screen.register.inputHolder.fullName')}
               placeholderTextColor={'#919EAB'}
               style={styles.input}
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
             <Text style={{ color: 'white' }}>
-              Email <Text>*</Text>
+              {t('screen.register.label.email')} <Text>*</Text>
             </Text>
             <TextInput
-              placeholder="Nhập email hoặc số điện thoại"
+              placeholder={t('screen.register.inputHolder.email')}
               placeholderTextColor={'#919EAB'}
               style={styles.input}
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
             <Text>
-              Số điện thoại <Text>*</Text>
+              {t('screen.register.label.phoneNumber')} <Text>*</Text>
             </Text>
             <TextInput
-              placeholder="Nhập email hoặc số điện thoại"
+              placeholder={t('screen.register.inputHolder.phoneNumber')}
               placeholderTextColor={'#919EAB'}
               style={styles.input}
             ></TextInput>
           </View>
           <View style={{ gap: 8 }}>
-            <Text>Mật khẩu</Text>
+            <Text>{t('screen.register.label.password')} <Text>*</Text></Text>
             <View
               style={{
                 ...styles.input,
@@ -152,7 +154,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               }}
             >
               <TextInput
-                placeholder="Nhập mật khẩu"
+                placeholder={t('screen.register.inputHolder.password')}
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showPassword}
                 style={{ flex: 1, height: 40, color: 'black' }}
@@ -167,7 +169,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             </View>
           </View>
           <View style={{ gap: 8 }}>
-            <Text>Xác nhận mật khẩu</Text>
+            <Text>{t('screen.register.label.confirmPassword')} <Text>*</Text></Text>
             <View
               style={{
                 ...styles.input,
@@ -177,7 +179,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               }}
             >
               <TextInput
-                placeholder="Nhập lại mật khẩu"
+                placeholder={t('screen.register.inputHolder.confirmPassword')}
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showRePassword}
                 style={{ flex: 1, height: 40, color: 'black' }}
@@ -224,21 +226,21 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
 
               <Text style={[styles.label, { marginLeft: 5 }]}>
-                Đăng ký kinh doanh
+                {t('screen.register.label.businessRegistration')}
               </Text>
             </View>
           </View>
           {isEnabled && (
             <View style={{ gap: 8 }}>
               <Text>
-                Giấy phép kinh doanh <Text>*</Text>
+                {t('screen.register.label.businessLicense')} <Text>*</Text>
               </Text>
               <CusDropdown
                 items={businessLicenseList.map(item => ({
                   label: item.name,
                   value: item.id,
                 }))}
-                placeholder="Chọn giấy phép kinh doanh"
+                placeholder={t('screen.register.inputHolder.businessLicense')}
                 onChange={(value: string | null) => {
                   if (value) {
                     const selectedItem = businessLicenseList.find(
@@ -260,14 +262,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           {isEnabled && (
             <View style={{ gap: 8 }}>
               <Text>
-                Đối tượng đăng ký <Text style={{ color: 'red' }}>*</Text>
+                {t('screen.register.label.registrationObject')} <Text style={{ color: 'red' }}>*</Text>
               </Text>
               <CusDropdown
                 items={objectList.map(item => ({
                   label: item.name,
                   value: item.id,
                 }))}
-                placeholder="Chọn đối tượng đăng ký"
+                placeholder={t('screen.register.inputHolder.registrationObject')}
                 onChange={(value: string | null) => {
                   if (value) {
                     const selectedItem = objectList.find(
@@ -289,10 +291,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           {isEnabled && (
             <View style={{ gap: 8 }}>
               <Text>
-                Mặt trước CCCD/CMT <Text>*</Text>
+                {t('screen.register.label.IDfront')} <Text>*</Text>
               </Text>
               <CusImagePicker
-                placeholder="Tải ảnh mặt trước"
+                placeholder={t('screen.register.inputHolder.IDfront')}
                 onChange={image => console.log(image)}
                 disabled={false}
               />
@@ -301,10 +303,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           {isEnabled && (
             <View style={{ gap: 8 }}>
               <Text>
-                Mặt sau CCCD/CMT <Text>*</Text>
+                {t('screen.register.label.IDback')} <Text>*</Text>
               </Text>
               <CusImagePicker
-                placeholder="Tải ảnh mặt sau"
+                placeholder={t('screen.register.inputHolder.IDback')} 
                 onChange={image => console.log(image)}
                 disabled={false}
               />
@@ -340,8 +342,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
 
               <Text style={[styles.label, { marginLeft: 5 }]}>
-                Tôi đã đọc và đồng ý với các{' '}
-                <Text style={{ color: '#81BA41' }}>điều khoản sử dụng</Text>
+                {t('screen.register.label.agreeTerms')}
+                <Text style={{ color: '#81BA41' }}>{t('screen.register.label.termsOfUse')}</Text>
               </Text>
             </View>
           </View>

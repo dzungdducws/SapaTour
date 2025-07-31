@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { View, Text, ActivityIndicator } from 'react-native';
 
 export const Loading: React.FC = ({}) => {
+  const {t} = useTranslation();
   return (
     <View
       style={{
@@ -28,7 +30,7 @@ export const Loading: React.FC = ({}) => {
             transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
           }}
         >
-          Đang tải...
+          {t('component.loading.title')}
         </Text>
       </View>
     </View>

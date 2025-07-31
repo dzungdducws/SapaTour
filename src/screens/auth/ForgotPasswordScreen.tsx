@@ -13,6 +13,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types';
+import { useTranslation } from 'react-i18next';
 const { width: screenWidth } = Dimensions.get('window');
 
 type ForgotPasswordScreenProps = {
@@ -24,6 +25,7 @@ const iconLeftChevron = require('../../../assets/img/icon/icon-left-chevron.png'
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [imageHeight, setImageHeight] = useState(200); // placeholder
 
   useEffect(() => {
@@ -56,7 +58,9 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <TouchableOpacity onPress={() => handleBackPress()}>
           <Image source={iconLeftChevron} style={styles.iconLeftChevron} />
         </TouchableOpacity>
-        <Text style={styles.textHeader}>Quên mật khẩu </Text>
+        <Text style={styles.textHeader}>
+          {t('screen.forgetPassword.label.title')}{' '}
+        </Text>
       </View>
       <ImageBackground
         source={imageSource_1}
@@ -71,11 +75,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         <View style={{ padding: 16, width: '100%', gap: 24 }}>
           <View style={{ gap: 8 }}>
             <Text style={styles.label}>
-              Vui lòng nhập thông tin tài khoản để thực hiện cung cấp mật khẩu
-              mới!
+              {t('screen.forgetPassword.label.subTitle')}
             </Text>
             <TextInput
-              placeholder="Nhập email "
+              placeholder={t('screen.forgetPassword.inputHolder.email')}
               placeholderTextColor={'#919EAB'}
               style={styles.input}
             ></TextInput>
@@ -88,7 +91,9 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
             end={{ x: 1, y: 0 }}
             style={styles.confirmBtn}
           >
-            <Text style={styles.textBtn}>Xác nhận</Text>
+            <Text style={styles.textBtn}>
+              {t('screen.forgetPassword.button.confirm')}
+            </Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -129,7 +134,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    color:'black',
+    color: 'black',
 
     borderRadius: 8,
     paddingHorizontal: 16,

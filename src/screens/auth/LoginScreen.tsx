@@ -19,9 +19,10 @@ import { login } from '../../slice/userSlice';
 
 import { RootStackParamList } from '../../types';
 import { API_URL } from '../../const/const';
-import { clearHotelBooking } from '../../slice/hotelBookingSlice';
-import { clearRestaurantBooking } from '../../slice/restaurantBookingSlice';
 import { AppDispatch } from '../../store';
+
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -36,12 +37,14 @@ const iconEye = require('../../../assets/img/icon/icon-eye.png');
 const iconEyeOff = require('../../../assets/img/icon/icon-eye-off.png');
 
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [imageHeight, setImageHeight] = useState(200);
   const [showPassword, setShowPassword] = useState(true);
   const [emailOrPhoneNumber, setEmailOrPhoneNumber] =
     useState('user@gmail.com');
   const [password, setPassword] = useState('12345678');
-  const dispatch = useDispatch<AppDispatch>();;
+  const dispatch = useDispatch<AppDispatch>();
 
   const fadeAnim = useAnimatedValue(0);
 
@@ -114,7 +117,38 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         }}
         resizeMode="cover"
       >
-        <Image source={flagSource} style={styles.flag} />
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 30,
+            right: 30,
+            flexDirection: 'row',
+          }}
+          onPress={() => {
+            i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en');
+          }}
+        >
+          <Image
+            source={flagSource}
+            style={{
+              width: 24,
+              height: 24,
+              marginRight: 8,
+            }}
+          />
+          <Text
+            style={{
+              fontWeight: 600,
+              fontSize: 16,
+              lineHeight: 24,
+              color: '#fff',
+              textTransform: 'uppercase',
+              paddingRight: 4,
+            }}
+          >
+            {t('lang')}
+          </Text>
+        </TouchableOpacity>
       </ImageBackground>
       <View style={{ flex: 1, marginTop: 60, alignItems: 'center' }}>
         <Animated.View
@@ -176,9 +210,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               gap: 8,
             }}
           >
-            <Text>Email/ Số điện thoại</Text>
+            <Text>{t('screen.login.label.emailOrPhoneNumber')}</Text>
             <TextInput
-              placeholder="Nhập email hoặc số điện thoại"
+              placeholder={t('screen.login.inputHolder.emailOrPhoneNumber')}
               placeholderTextColor={'#919EAB'}
               style={styles.input}
               value={emailOrPhoneNumber}
@@ -191,7 +225,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               gap: 8,
             }}
           >
-            <Text>Mật khẩu</Text>
+            <Text>{t('screen.login.label.password')}</Text>
             <View
               style={{
                 ...styles.input,
@@ -201,7 +235,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               }}
             >
               <TextInput
-                placeholder="Nhập mật khẩu"
+                placeholder={t('screen.login.inputHolder.password')}
                 placeholderTextColor="#919EAB"
                 secureTextEntry={showPassword}
                 style={{ flex: 1, height: 40, color: 'black' }}
@@ -245,7 +279,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 navigation.navigate('ForgotPassword');
               }}
             >
-              Quên mật khẩu?
+              {t('screen.login.label.forgetPassword')}
             </Text>
           </View>
 
@@ -261,13 +295,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               end={{ x: 1, y: 0 }}
               style={styles.loginBtn}
             >
-              <Text style={styles.textBtn}>Đăng nhập</Text>
+              <Text style={styles.textBtn}>
+                {t('screen.login.button.login')}
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
 
           <View style={{ gap: 8, alignItems: 'center' }}>
             <Text style={styles.label}>
-              Bạn chưa có tài khoản?{' '}
+              {t('screen.login.label.haveAccount')}{' '}
               <Text
                 style={styles.textForgetPass}
                 onPress={() => {
@@ -275,7 +311,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 }}
               >
                 {' '}
-                Đăng ký
+                {t('screen.login.label.register')}
               </Text>
             </Text>
             <Text
@@ -284,7 +320,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 navigation.navigate('Home');
               }}
             >
-              Bỏ qua
+              {t('screen.login.label.skip')}
             </Text>
           </View>
         </Animated.View>
@@ -317,14 +353,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     letterSpacing: 0,
     textAlign: 'center',
-  },
-
-  flag: {
-    width: 48,
-    height: 24,
-    position: 'absolute',
-    top: 20,
-    right: 20,
   },
 
   label: {

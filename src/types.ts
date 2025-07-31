@@ -13,11 +13,8 @@ export type RootStackParamList = {
   Menu: any;
   Four: any;
 
-  DetailInfoHotelBooking: { navigation: any; item: HotelBooking };
-  DetailInfoRestaurantBooking: {
-    navigation: any;
-    item: RestaurantBooking;
-  };
+  DetailInfoHotelBooking: any;
+  DetailInfoRestaurantBooking: any;
 
   RouteInMenu: any;
   HeartInMenu: any;

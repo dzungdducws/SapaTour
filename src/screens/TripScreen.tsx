@@ -19,17 +19,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BookingHotelInList } from '../components/BookingHotelInList';
 import { UserState, logout, logoutThunk } from '../slice/userSlice';
 import {
-  clearHotelBooking,
+  clearHotelBookings,
   HotelBooking,
   HotelBookingState,
-  setHotelBooking,
+  setHotelBookings,
 } from '../slice/hotelBookingSlice';
 import { API_URL } from '../const/const';
 import {
-  clearRestaurantBooking,
+  clearRestaurantBookings,
   RestaurantBooking,
   RestaurantBookingState,
-  setRestaurantBooking,
+  setRestaurantBookings,
 } from '../slice/restaurantBookingSlice';
 import { BookingRestaurantInList } from '../components/BookingRestaurantInList';
 import { formatVNDate } from '../utils/utils';
@@ -130,7 +130,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     })
       .then(res => res.json())
       .then(res => {
-        dispatch(setHotelBooking(res.data));
+        dispatch(setHotelBookings(res.data));
         setLoadingHotel(false);
       })
       .catch(err => {
@@ -147,7 +147,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     })
       .then(res => res.json())
       .then(res => {
-        dispatch(setRestaurantBooking(res.data));
+        dispatch(setRestaurantBookings(res.data));
         setLoadingRestaurant(false);
       })
       .catch(err => {
@@ -198,8 +198,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    dispatch(clearHotelBooking());
-    dispatch(clearRestaurantBooking());
+    dispatch(clearHotelBookings());
+    dispatch(clearRestaurantBookings());
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
@@ -267,8 +267,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
               ]}
               onPress={() => {
                 setSelectedStatus(status.id);
-                dispatch(clearHotelBooking());
-                dispatch(clearRestaurantBooking());
+                dispatch(clearHotelBookings());
+                dispatch(clearRestaurantBookings());
               }}
             >
               <Text
@@ -294,8 +294,8 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
               key={discovery.id}
               onPress={() => {
                 setSelectedDiscovery(discovery.id);
-                dispatch(clearHotelBooking());
-                dispatch(clearRestaurantBooking());
+                dispatch(clearHotelBookings());
+                dispatch(clearRestaurantBookings());
               }}
               style={[
                 styles.discoveryItem,

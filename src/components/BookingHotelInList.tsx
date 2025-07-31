@@ -5,6 +5,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { HotelBooking } from '../slice/hotelBookingSlice';
 import { formatVNDate } from '../utils/utils';
+import { useDispatch } from 'react-redux';
+import { setHotelBooking } from '../slice/detailInfoHotelBooking';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -17,6 +19,7 @@ export const BookingHotelInList: React.FC<Props> = ({
   item,
   onPressThongTinThanhToan,
 }) => {
+  const dispatch = useDispatch();
   const { rooms } = item;
 
   const diffDate = (): number => {
@@ -28,6 +31,10 @@ export const BookingHotelInList: React.FC<Props> = ({
 
     return diffDays;
   };
+
+  function setDetailInfoHotelBooking(item: HotelBooking): any {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <View
@@ -102,12 +109,10 @@ export const BookingHotelInList: React.FC<Props> = ({
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('DetailInfoHotelBooking', {
-              navigation,
-              item,
-            })
-          }
+          onPress={() => {
+            dispatch(setHotelBooking(item));
+            navigation.navigate('DetailInfoHotelBooking');
+          }}
         >
           <Image
             source={require('../../assets/img/icon/info.png')}

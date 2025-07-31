@@ -49,18 +49,18 @@ const hotelBookingSlice = createSlice({
   name: 'hotelBooking',
   initialState,
   reducers: {
-    setHotelBooking: (state, action: PayloadAction<HotelBooking[]>) => {
+    setHotelBookings: (state, action: PayloadAction<HotelBooking[]>) => {
       state.isNeedFetchHotel = false;
       state.hotel_bookings = action.payload;
     },
-    clearHotelBooking: state => {
+    clearHotelBookings: state => {
       state.isNeedFetchHotel = true;
       state.hotel_bookings = [];
     },
-    addHotelBooking: (state, action: PayloadAction<HotelBooking>) => {
+    addHotelBookings: (state, action: PayloadAction<HotelBooking>) => {
       state.hotel_bookings.push(action.payload);
     },
-    removeHotelBooking: (state, action: PayloadAction<string>) => {
+    removeHotelBookings: (state, action: PayloadAction<string>) => {
       state.hotel_bookings = state.hotel_bookings.filter(
         hotel_booking => hotel_booking.id !== action.payload,
       );
@@ -69,10 +69,10 @@ const hotelBookingSlice = createSlice({
 });
 
 export const {
-  setHotelBooking,
-  clearHotelBooking,
-  addHotelBooking,
-  removeHotelBooking,
+  setHotelBookings,
+  clearHotelBookings,
+  addHotelBookings,
+  removeHotelBookings,
 } = hotelBookingSlice.actions;
 
 export default hotelBookingSlice.reducer;

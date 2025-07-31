@@ -5,6 +5,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { RestaurantBooking } from '../slice/restaurantBookingSlice';
 import { formatVNDate } from '../utils/utils';
+import { setRestaurantBooking } from '../slice/detailInfoRestaurantBooking';
+import { useDispatch } from 'react-redux';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -14,6 +16,7 @@ export const BookingRestaurantInList: React.FC<Props> = ({
   navigation,
   item,
 }) => {
+  const dispatch = useDispatch();
   const { bill } = item;
 
   return (
@@ -95,12 +98,10 @@ export const BookingRestaurantInList: React.FC<Props> = ({
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('DetailInfoRestaurantBooking', {
-              navigation,
-              item,
-            })
-          }
+          onPress={() => {
+            dispatch(setRestaurantBooking(item));
+            navigation.navigate('DetailInfoRestaurantBooking');
+          }}
         >
           <Image
             source={require('../../assets/img/icon/info.png')}

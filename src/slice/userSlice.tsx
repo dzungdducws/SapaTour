@@ -6,8 +6,8 @@ import {
   UnknownAction,
 } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { clearRestaurantBooking } from './restaurantBookingSlice';
-import { clearHotelBooking } from './hotelBookingSlice';
+import { clearRestaurantBookings } from './restaurantBookingSlice';
+import { clearHotelBookings } from './hotelBookingSlice';
 import { AppDispatch, RootState } from '../store';
 
 export interface UserInfo {
@@ -78,8 +78,8 @@ export const logoutThunk = (): ThunkAction<
 > => {
   return (dispatch, getState) => {
     dispatch(logout()); // từ createSlice
-    dispatch(clearHotelBooking());
-    dispatch(clearRestaurantBooking());
+    dispatch(clearHotelBookings());
+    dispatch(clearRestaurantBookings());
   };
 };
 

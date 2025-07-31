@@ -13,23 +13,30 @@ import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
 import { formatVNDate } from '../utils/utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../slice/userSlice';
 import { StatusState } from '../slice/statusSlice';
+import { clearRestaurantBooking, DetailInfoRestaurantBookingState } from '../slice/detailInfoRestaurantBooking';
 
 type DetailInfoRestaurantBookingProps = {
   navigation: NativeStackNavigationProp<
     RootStackParamList,
     'DetailInfoRestaurantBooking'
   >;
-  route: RouteProp<RootStackParamList, 'DetailInfoRestaurantBooking'>;
 };
 
 const DetailInfoRestaurantBookingScreen: React.FC<
   DetailInfoRestaurantBookingProps
-> = ({ navigation, route }) => {
-  const item = route.params?.item;
-  const { bill } = item;
+> = ({ navigation }) => {
+  const restaurant_booking = useSelector(
+    (state: {
+      detailInfoRestaurantBooking: DetailInfoRestaurantBookingState;
+    }) => state.detailInfoRestaurantBooking.restaurant_booking,
+  );
+
+  const dispatch = useDispatch();
+
+  const { bill } = restaurant_booking ?? { bill: [] };
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -65,6 +72,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
           style={{ justifyContent: 'center', alignItems: 'center' }}
           onPress={() => {
             navigation.goBack();
+            dispatch(clearRestaurantBooking());
           }}
         >
           <Image
@@ -91,7 +99,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
           style={{
             paddingHorizontal: 12,
             paddingVertical: 8,
-            backgroundColor: sI[item.status - 1].bgcolor,
+            backgroundColor: sI[(restaurant_booking?.status || 0) - 1].bgcolor,
             marginBottom: 16,
           }}
         >
@@ -100,10 +108,10 @@ const DetailInfoRestaurantBookingScreen: React.FC<
               fontWeight: 600,
               fontSize: 14,
               lineHeight: 22,
-              color: sI[item.status - 1].color,
+              color: sI[(restaurant_booking?.status || 0) - 1].color,
             }}
           >
-            {sI[item.status - 1].name}
+            {sI[(restaurant_booking?.status || 0) - 1].name}
           </Text>
           <Text
             style={{
@@ -112,8 +120,8 @@ const DetailInfoRestaurantBookingScreen: React.FC<
               lineHeight: 18,
             }}
           >
-            {sI[item.status - 1].description}
-            {item.status === 6 && (
+            {sI[(restaurant_booking?.status || 0) - 1].description}
+            {restaurant_booking?.status === 6 && (
               <Text
                 style={{
                   fontWeight: 600,
@@ -122,14 +130,17 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                 }}
               >
                 {' '}
-                {item.updated_at
-                  ? new Date(item.updated_at).toLocaleString('vi-VN', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                    })
+                {restaurant_booking.updated_at
+                  ? new Date(restaurant_booking.updated_at).toLocaleString(
+                      'vi-VN',
+                      {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      },
+                    )
                   : ''}
               </Text>
             )}
@@ -201,14 +212,14 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                   color: '#FFFFFF',
                 }}
               >
-                Mã booking: {item.id}
+                Mã booking: {restaurant_booking?.id}
               </Text>
             </TouchableOpacity>
 
             {[
               { label: 'Số điện thoại: ', value: userInfo.phone },
               { label: 'Họ và tên: ', value: userInfo.name },
-              { label: 'Ghi chú: ', value: item.note },
+              { label: 'Ghi chú: ', value: restaurant_booking?.note },
             ].map(({ label, value }, index) => (
               <Text
                 key={index}
@@ -327,7 +338,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {item.name}
+                  {restaurant_booking?.name}
                 </Text>
               </View>
               <Image
@@ -367,13 +378,13 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {item.location}
+                {restaurant_booking?.location}
               </Text>
             </View>
 
             <View style={{ flexDirection: 'row' }}>
               <Image
-                source={{ uri: item.image }}
+                source={{ uri: restaurant_booking?.image }}
                 style={{ width: 74, height: 74, marginRight: 12 }}
               ></Image>
               <View style={{ justifyContent: 'space-between' }}>
@@ -397,7 +408,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                       lineHeight: 22,
                     }}
                   >
-                    {formatVNDate(item.check_in_date)}
+                    {formatVNDate(restaurant_booking?.check_in_date || '')}
                   </Text>
                 </View>
                 <View
@@ -420,7 +431,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                       lineHeight: 22,
                     }}
                   >
-                    {item.check_in_time}
+                    {restaurant_booking?.check_in_time}
                   </Text>
                 </View>
                 <View
@@ -443,14 +454,14 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                       lineHeight: 22,
                     }}
                   >
-                    {item.number_people}
+                    {restaurant_booking?.number_people}
                   </Text>
                 </View>
               </View>
             </View>
           </View>
         </View>
-        {item.status !== 6 && (
+        {restaurant_booking?.status !== 6 && (
           <View style={{ paddingHorizontal: 16 }}>
             <Text
               style={{
@@ -576,7 +587,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
             {[
               {
                 label: 'Tiền món ăn: ',
-                value: item.totalPriceBill,
+                value: restaurant_booking?.totalPriceBill,
                 isFinal: false,
               },
 
@@ -587,7 +598,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
               },
               {
                 label: 'Tổng tiền: ',
-                value: item.totalPriceBill,
+                value: restaurant_booking?.totalPriceBill,
                 isFinal: true,
               },
             ].map(({ label, value, isFinal }, index) => (
@@ -625,7 +636,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                       textAlign: 'right',
                     }}
                   >
-                    {value.toLocaleString('de-DE')} VND
+                    {value?.toLocaleString('de-DE')} VND
                   </Text>
                 </View>
               </View>
@@ -633,7 +644,7 @@ const DetailInfoRestaurantBookingScreen: React.FC<
           </View>
         </View>
 
-        {item.status !== 6 && (
+        {restaurant_booking?.status !== 6 && (
           <TouchableOpacity
             style={{
               borderColor: '#E0E0E0',
@@ -666,14 +677,14 @@ const DetailInfoRestaurantBookingScreen: React.FC<
                   textAlign: 'center',
                 }}
               >
-                {[1, 2, 3, 4].includes(item.status)
+                {[1, 2, 3, 4].includes(restaurant_booking?.status || 1)
                   ? 'Thông tin thanh toán'
                   : 'Đánh giá ngay'}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
         )}
-        {[1, 2, 3].includes(item.status) && (
+        {[1, 2, 3].includes(restaurant_booking?.status || 1) && (
           <TouchableOpacity
             style={{
               borderColor: '#FF4842',

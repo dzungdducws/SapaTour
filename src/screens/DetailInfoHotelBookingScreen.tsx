@@ -12,25 +12,34 @@ import { RootStackParamList } from '../types';
 import { RouteProp } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { ThongTinThanhToanModal } from '../components/ThongTinThanhToanModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../slice/userSlice';
 import { formatVNDate } from '../utils/utils';
 import { StatusState } from '../slice/statusSlice';
+import { clearHotelBooking, DetailInfoHotelBookingState } from '../slice/detailInfoHotelBooking';
 
 type DetailInfoHotelBookingProps = {
   navigation: NativeStackNavigationProp<
     RootStackParamList,
     'DetailInfoHotelBooking'
   >;
-  route: RouteProp<RootStackParamList, 'DetailInfoHotelBooking'>;
 };
 
 const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
   navigation,
-  route,
 }) => {
-  const item = route.params?.item;
-  const { rooms, services } = item;
+  const dispatch = useDispatch();
+
+  const hotel_booking = useSelector(
+    (state: { detailInfoHotelBooking: DetailInfoHotelBookingState }) =>
+      state.detailInfoHotelBooking.hotel_booking,
+  );
+  const { rooms, services } = hotel_booking
+    ? hotel_booking
+    : {
+        rooms: [],
+        services: [],
+      };
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -51,8 +60,8 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
   });
 
   const diffDate = (): number => {
-    const s = new Date(item.check_in_date);
-    const e = new Date(item.check_out_date);
+    const s = new Date(hotel_booking?.check_in_date || '');
+    const e = new Date(hotel_booking?.check_out_date || '');
 
     const diffTime = Math.abs(e.getTime() - s.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -76,6 +85,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'center' }}
           onPress={() => {
+            dispatch(clearHotelBooking());
             navigation.goBack();
           }}
         >
@@ -103,7 +113,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
           style={{
             paddingHorizontal: 12,
             paddingVertical: 8,
-            backgroundColor: sI[item.status - 1].bgcolor,
+            backgroundColor: sI[(hotel_booking?.status || 0) - 1].bgcolor,
             marginBottom: 16,
           }}
         >
@@ -112,10 +122,10 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               fontWeight: 600,
               fontSize: 14,
               lineHeight: 22,
-              color: sI[item.status - 1].color,
+              color: sI[(hotel_booking?.status || 0) - 1].color,
             }}
           >
-            {sI[item.status - 1].name}
+            {sI[(hotel_booking?.status || 0) - 1].name}
           </Text>
           <Text
             style={{
@@ -124,8 +134,8 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               lineHeight: 18,
             }}
           >
-            {sI[item.status - 1].description}
-            {item.status === 6 && (
+            {sI[(hotel_booking?.status || 0) - 1].description}
+            {hotel_booking?.status === 6 && (
               <Text
                 style={{
                   fontWeight: 600,
@@ -134,14 +144,17 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 }}
               >
                 {' '}
-                {item.updated_at
-                  ? new Date(item.updated_at).toLocaleString('vi-VN', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                    })
+                {hotel_booking?.updated_at
+                  ? new Date(hotel_booking?.updated_at).toLocaleString(
+                      'vi-VN',
+                      {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      },
+                    )
                   : ''}
               </Text>
             )}
@@ -215,14 +228,14 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                Mã booking: {item.id}
+                Mã booking: {hotel_booking?.id}
               </Text>
             </TouchableOpacity>
 
             {[
               { label: 'Số điện thoại: ', value: userInfo.phone },
               { label: 'Họ và tên: ', value: userInfo.name },
-              { label: 'Ghi chú: ', value: item.note },
+              { label: 'Ghi chú: ', value: hotel_booking?.note },
             ].map(({ label, value }, index) => (
               <Text
                 key={index}
@@ -341,7 +354,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {item.name}
+                  {hotel_booking?.name}
                 </Text>
               </View>
               <Image
@@ -381,7 +394,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {item.location}
+                {hotel_booking?.location}
               </Text>
             </View>
 
@@ -490,7 +503,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                     lineHeight: 22,
                   }}
                 >
-                  {formatVNDate(item.check_in_date)}
+                  {formatVNDate(hotel_booking?.check_in_date || '')}
                 </Text>
               </View>
 
@@ -533,15 +546,15 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                     lineHeight: 22,
                   }}
                 >
-                  {formatVNDate(item.check_out_date)}
+                  {formatVNDate(hotel_booking?.check_out_date || '')}
                 </Text>
               </View>
             </View>
           </View>
         </View>
-        {item.status !== 6 &&
-          item.services !== undefined &&
-          item.services?.length !== 0 && (
+        {hotel_booking?.status !== 6 &&
+          hotel_booking?.services !== undefined &&
+          hotel_booking?.services?.length !== 0 && (
             <View style={{ paddingHorizontal: 16 }}>
               <Text
                 style={{
@@ -634,7 +647,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               </View>
             </View>
           )}
-        {item.status !== 6 && (
+        {hotel_booking?.status !== 6 && (
           <View style={{ paddingHorizontal: 16 }}>
             <Text
               style={{
@@ -668,12 +681,12 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
               {[
                 {
                   label: 'Tiền phòng: ',
-                  value: item.totalPriceRoom,
+                  value: hotel_booking?.totalPriceRoom,
                   isFinal: false,
                 },
                 {
                   label: 'Tiền dịch vụ: ',
-                  value: item.totalPriceService,
+                  value: hotel_booking?.totalPriceService,
                   isFinal: false,
                 },
                 {
@@ -683,7 +696,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                 },
                 {
                   label: 'Tổng tiền: ',
-                  value: item.totalPrice,
+                  value: hotel_booking?.totalPrice,
                   isFinal: true,
                 },
               ].map(({ label, value, isFinal }, index) => (
@@ -721,7 +734,9 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                         textAlign: 'right',
                       }}
                     >
-                      {value.toLocaleString('de-DE')} VND
+                      {typeof value === 'number'
+                        ? `${value.toLocaleString('de-DE')} VND`
+                        : value}
                     </Text>
                   </View>
                 </View>
@@ -729,7 +744,7 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
             </View>
           </View>
         )}
-        {item.status !== 6 && (
+        {hotel_booking?.status !== 6 && (
           <TouchableOpacity
             style={{
               borderColor: '#E0E0E0',
@@ -762,14 +777,16 @@ const DetailInfoHotelBookingScreen: React.FC<DetailInfoHotelBookingProps> = ({
                   textAlign: 'center',
                 }}
               >
-                {['1', '2', '3', '4'].includes(item.status.toString())
+                {['1', '2', '3', '4'].includes(
+                  hotel_booking?.status?.toString() || '',
+                )
                   ? 'Thông tin thanh toán'
                   : 'Đánh giá ngay'}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
         )}
-        {['1', '2', '3'].includes(item.status.toString()) && (
+        {['1', '2', '3'].includes(hotel_booking?.status?.toString() || '') && (
           <TouchableOpacity
             style={{
               borderColor: '#FF4842',

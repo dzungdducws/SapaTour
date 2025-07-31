@@ -6,6 +6,8 @@ import hotelSlice from './slice/hotelSlice';
 import restaurantSlice from './slice/restaurantSlice';
 import hotelBookingSlice from './slice/hotelBookingSlice';
 import restaurantBookingSlice from './slice/restaurantBookingSlice';
+import detailInfoHotelBookingSlice from './slice/detailInfoHotelBooking';
+import detailInfoRestaurantBookingSlice from './slice/detailInfoRestaurantBooking';
 import statusSlice from './slice/statusSlice';
 
 let enhancers: any[] = [];
@@ -25,6 +27,8 @@ export const store = configureStore({
     hotelBooking: hotelBookingSlice,
     restaurantBooking: restaurantBookingSlice,
     status: statusSlice,
+    detailInfoHotelBooking: detailInfoHotelBookingSlice,
+    detailInfoRestaurantBooking: detailInfoRestaurantBookingSlice,
   },
   // middleware: getDefaultMiddleware => getDefaultMiddleware(),
   enhancers: getDefaultEnhancers => getDefaultEnhancers().concat(enhancers),

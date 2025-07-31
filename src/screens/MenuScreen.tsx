@@ -17,8 +17,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutThunk, UserState } from '../slice/userSlice';
 import { logout } from '../slice/userSlice';
-import { clearHotelBooking } from '../slice/hotelBookingSlice';
-import { clearRestaurantBooking } from '../slice/restaurantBookingSlice';
+import { clearHotelBookings } from '../slice/hotelBookingSlice';
+import { clearRestaurantBookings } from '../slice/restaurantBookingSlice';
 import { AppDispatch } from '../store';
 
 type MenuScreenProps = {
@@ -249,8 +249,8 @@ const MenuScreen = ({ navigation }: MenuScreenProps) => {
                 }}
                 onPress={() => {
                   dispatch(logoutThunk());;
-                  dispatch(clearRestaurantBooking());
-                  dispatch(clearHotelBooking());
+                  dispatch(clearRestaurantBookings());
+                  dispatch(clearHotelBookings());
                   navigation.reset({
                     index: 0,
                     routes: [{ name: 'Login' }],

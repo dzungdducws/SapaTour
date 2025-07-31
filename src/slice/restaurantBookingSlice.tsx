@@ -39,21 +39,21 @@ const restaurantBookingSlice = createSlice({
   name: 'restaurantBooking',
   initialState,
   reducers: {
-    setRestaurantBooking: (
+    setRestaurantBookings: (
       state,
       action: PayloadAction<RestaurantBooking[]>,
     ) => {
       state.isNeedFetchRestaurant = false;
       state.restaurant_bookings = action.payload;
     },
-    clearRestaurantBooking: state => {
+    clearRestaurantBookings: state => {
       state.isNeedFetchRestaurant = true;
       state.restaurant_bookings = [];
     },
-    addRestaurantBooking: (state, action: PayloadAction<RestaurantBooking>) => {
+    addRestaurantBookings: (state, action: PayloadAction<RestaurantBooking>) => {
       state.restaurant_bookings.push(action.payload);
     },
-    removeRestaurantBooking: (state, action: PayloadAction<string>) => {
+    removeRestaurantBookings: (state, action: PayloadAction<string>) => {
       state.restaurant_bookings = state.restaurant_bookings.filter(
         restaurant_booking => restaurant_booking.id !== action.payload,
       );
@@ -62,10 +62,10 @@ const restaurantBookingSlice = createSlice({
 });
 
 export const {
-  setRestaurantBooking,
-  clearRestaurantBooking,
-  addRestaurantBooking,
-  removeRestaurantBooking,
+  setRestaurantBookings,
+  clearRestaurantBookings,
+  addRestaurantBookings,
+  removeRestaurantBookings,
 } = restaurantBookingSlice.actions;
 
 export default restaurantBookingSlice.reducer;

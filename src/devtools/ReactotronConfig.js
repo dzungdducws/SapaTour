@@ -9,9 +9,9 @@ const reactotron = Reactotron.configure({
   // host: '192.168.1.31',
 }) // controls connection & communication settings
   .use(reactotronRedux({}))
-  // .use(sagaMonitorPlugin)
+  .use(sagaPlugin())
   .useReactNative() // add all built-in react native plugins
   .connect(); // let's connect!
 
 export default reactotron
-export const sagaMonitor = sagaMonitorPlugin.createSagaMonitor?.();
+// export const sagaMonitor = sagaMonitorPlugin.createSagaMonitor?.();

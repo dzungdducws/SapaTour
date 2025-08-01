@@ -11,7 +11,6 @@ import detailInfoRestaurantBookingSlice from './slice/detailInfoRestaurantBookin
 import statusSlice from './slice/statusSlice';
 // import createSagaMiddleware from 'redux-saga';
 import { rootSaga } from './services_saga/rootSaga';
-import { sagaMonitor } from './devtools/ReactotronConfig';
 
 let enhancers: any[] = [];
 const createSagaMiddleware = require('redux-saga').default;
@@ -21,6 +20,7 @@ let middleware: any[] = [];
 if (__DEV__) {
   const reactotron = require('./devtools/ReactotronConfig').default;
   enhancers.push(reactotron.createEnhancer());
+  const sagaMonitor = reactotron.createSagaMonitor();
 
   sagaMiddleware = createSagaMiddleware({ sagaMonitor });
   middleware.push(sagaMiddleware);

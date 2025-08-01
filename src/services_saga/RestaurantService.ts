@@ -1,30 +1,46 @@
+import { call, put } from 'redux-saga/effects';
 import { API_URL } from '../const/const';
-import { Restaurant } from '../slice/restaurantSlice';
+import container from '../dependencies/dependencies';
+import { HotelService } from '../services/HotelService';
+import { setHotel } from '../slice/hotelSlice';
+import { RestaurantService } from '../services/RestaurantService';
+import { setRestaurantBooking } from '../slice/detailInfoRestaurantBooking';
+import { setRestaurant } from '../slice/restaurantSlice';
+import { setRestaurantBookings } from '../slice/restaurantBookingSlice';
 
-export class RestaurantService {
-  getRestaurantList = async (): Promise<{
-    status: number;
-    data: Restaurant[];
-  }> => {
-    try {
-      const response = await fetch(`${API_URL}/restaurant/getRestaurant`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const resJson = await response.json();
-      return {
-        status: resJson.status,
-        data: resJson.data as Restaurant[],
-      };
-    } catch (err) {
-      console.error(err);
-      return {
-        status: 500,
-        data: [],
-      };
+const restaurantService = container.get<RestaurantService>('RestaurantService');
+
+function* getRestaurantListSaga(): Generator<any, void, any> {
+  try {
+    const res = yield call([
+      restaurantService,
+      restaurantService.getRestaurantList,
+    ]);
+    
+    if (res.status == 200) {
+      yield put(setRestaurant(res.data));
     }
-  };
+  } catch (err) {
+    console.error(err);
+  }
 }
+
+function* getRestaurantBookingSaga(action: {
+  type: string;
+  payload: string;
+}): Generator<any, void, any> {
+  try {
+    const userInfoId = action.payload;
+    const res = yield call(
+      [restaurantService, restaurantService.getRestaurantBooking],
+      userInfoId,
+    );
+    if (res.status == 200) {
+      yield put(setRestaurantBookings(res.data));
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export { getRestaurantListSaga, getRestaurantBookingSaga };

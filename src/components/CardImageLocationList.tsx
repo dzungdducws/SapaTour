@@ -7,8 +7,6 @@ type CardImageLocationListProps = {
 };
 
 const CardImageLocationList = ({ locations }: CardImageLocationListProps) => {
-  console.log('re render list');
-
   return locations?.map((item, index) => (
     <CardImageLocation
       key={index}

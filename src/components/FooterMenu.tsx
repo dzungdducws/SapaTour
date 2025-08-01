@@ -49,20 +49,20 @@ export const FooterMenu: React.FC<FooterMenuProps> = ({
     });
   }, [navigation]);
 
-  useFocusEffect(() => {
-    if (navigation.getState().routes.length === 1) return;
-    const endTime = performance.now();
-    const transitionTime = endTime - startTimeRef.current;
-    const arr = navigation.getState().routes;
-    console.log(
-      `⏱️ Thời gian chuyển từ ${arr[arr.length - 2].name} sang ${
-        arr[arr.length - 1].name
-      } : ${transitionTime.toFixed(2)}ms`,
-    );
+  // useFocusEffect(() => {
+  //   if (navigation.getState().routes.length === 1) return;
+  //   const endTime = performance.now();
+  //   const transitionTime = endTime - startTimeRef.current;
+  //   const arr = navigation.getState().routes;
+  //   console.log(
+  //     `⏱️ Thời gian chuyển từ ${arr[arr.length - 2].name} sang ${
+  //       arr[arr.length - 1].name
+  //     } : ${transitionTime.toFixed(2)}ms`,
+  //   );
 
-    // Reset time nếu bạn quay lại màn này sau đó
-    startTimeRef.current = performance.now();
-  });
+  //   // Reset time nếu bạn quay lại màn này sau đó
+  //   startTimeRef.current = performance.now();
+  // });
 
   return (
     <View style={styles.container}>

@@ -1,27 +1,46 @@
+import { call, put } from 'redux-saga/effects';
 import { API_URL } from '../const/const';
-import { Hotel } from '../slice/hotelSlice';
+import container from '../dependencies/dependencies';
+import { HotelService } from '../services/HotelService';
+import { setHotel } from '../slice/hotelSlice';
+import { setHotelBooking } from '../slice/detailInfoHotelBooking';
+import { setHotelBookings } from '../slice/hotelBookingSlice';
 
-export class HotelService {
-  getHotelList = async (): Promise<{ status: number; data: Hotel[] }> => {
-    try {
-      const response = await fetch(`${API_URL}/hotel/getHotel`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+const hotelService = container.get<HotelService>('HotelService');
 
-      const resJson = await response.json();
-      return {
-        status: resJson.status,
-        data: resJson.data as Hotel[],
-      };
-    } catch (err) {
-      console.error(err);
-      return {
-        status: 500,
-        data: [],
-      };
+function* getHotelListSaga(): Generator<any, void, any> {
+  try {
+    
+    const res = yield call([hotelService, hotelService.getHotelList]);
+    console.log(res);
+    
+    if (res.status == 200) {
+      yield put(setHotel(res.data));
     }
-  };
+  } catch (err) {
+    console.error(err);
+  }
 }
+
+function* getHotelBookingSaga(action: {
+  type: string;
+  payload: string;
+}): Generator<any, void, any> {
+  try {
+    const userInfoId = action.payload;
+
+    const res = yield call(
+      [hotelService, hotelService.getHotelBooking],
+      userInfoId,
+    );
+    console.log(res);
+    
+    if (res.status == 200) {
+      yield put(setHotelBookings(res.data));
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export { getHotelListSaga, getHotelBookingSaga };

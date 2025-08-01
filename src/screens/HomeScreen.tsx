@@ -52,17 +52,14 @@ type HomeScreenProps = {
 
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  useEffect(() => {
-    const start = performance.now();
-    return () => {
-      console.log(
-        `[HomeScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
-      );
-    };
-  }, []);
-  // const countRerender = useRef(0);
-  // countRerender.current++;
-  // console.log(`Rerender ${countRerender.current}`);
+  // useEffect(() => {
+  //   const start = performance.now();
+  //   return () => {
+  //     console.log(
+  //       `[HomeScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+  //     );
+  //   };
+  // }, []);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -86,21 +83,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const imageLocal = container.get<ImageLocal>('ImageLocal');
 
   const fetchLocation = async () => {
-    const data = await locationService.getLocationList();
-
-    dispatch(setLocation(data.data));
+    dispatch({ type: 'FETCH_LOCATION_LIST' });
+    // const data = await locationService.getLocationList();
+    // dispatch(setLocation(data.data));
   };
 
   const fetchHotel = async () => {
-    const data = await hotelService.getHotelList();
-
-    dispatch(setHotel(data.data));
+    dispatch({ type: 'FETCH_HOTEL_LIST' });
+    // const data = await hotelService.getHotelList();
+    // dispatch(setHotel(data.data));
   };
 
   const fetchRestaurant = async () => {
-    const data = await restaurantService.getRestaurantList();
-
-    dispatch(setRestaurant(data.data));
+    dispatch({ type: 'FETCH_RESTAURANT_LIST' });
+    // const data = await restaurantService.getRestaurantList();
+    // dispatch(setRestaurant(data.data));
   };
 
   const [selectedLocationDiscovery, setSelectedLocationDiscovery] = useState(0);
@@ -169,11 +166,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, []);
 
   const [startTime] = useState(Date.now());
-
-  useEffect(() => {
-    const renderTime = Date.now() - startTime;
-    console.log(`Render time: ${renderTime}ms`);
-  }, []);
 
   return (
     <View

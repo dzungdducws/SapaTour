@@ -50,14 +50,14 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     container.get<RestaurantService>('RestaurantService');
   const hotelService = container.get<HotelService>('HotelService');
 
-  useEffect(() => {
-    const start = performance.now();
-    return () => {
-      console.log(
-        `[TripScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
-      );
-    };
-  }, []);
+  // useEffect(() => {
+  //   const start = performance.now();
+  //   return () => {
+  //     console.log(
+  //       `[TripScreen] mount -> ${(performance.now() - start).toFixed(2)}ms`,
+  //     );
+  //   };
+  // }, []);
 
   const dispatch = useDispatch<AppDispatch>();
   const { isLogin, userInfo } = useSelector(
@@ -83,19 +83,17 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     start: string;
     end: string;
   } | null>(null);
-  const [loadingHotel, setLoadingHotel] = useState(false);
-  const [loadingRestaurant, setLoadingRestaurant] = useState(false);
 
   const fetchHotelBooking = async () => {
-    const data = await hotelService.getHotelBooking(userInfo.id);
-    dispatch(setHotelBookings(data.data));
-    setLoadingHotel(false);
+    dispatch({ type: 'FETCH_HOTEL_BOOKING_LIST', payload: userInfo.id });
+    // const data = await hotelService.getHotelBooking(userInfo.id);
+    // dispatch(setHotelBookings(data.data));
   };
 
   const fetchRestaurantBooking = async () => {
-    const data = await restaurantService.getRestaurantBooking(userInfo.id);
-    dispatch(setRestaurantBookings(data.data));
-    setLoadingRestaurant(false);
+    dispatch({ type: 'FETCH_RESTAURANT_BOOKING_LIST', payload: userInfo.id });
+    // const data = await restaurantService.getRestaurantBooking(userInfo.id);
+    // dispatch(setRestaurantBookings(data.data));
   };
 
   const fetchStatus = async (type: number) => {
@@ -118,7 +116,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       isLogin &&
       discoveryConfig[selectedDiscovery].types.includes(1)
     ) {
-      setLoadingHotel(true);
       fetchHotelBooking();
       fetchStatus(1);
     }
@@ -127,7 +124,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       isLogin &&
       discoveryConfig[selectedDiscovery].types.includes(2)
     ) {
-      setLoadingRestaurant(true);
       fetchRestaurantBooking();
       fetchStatus(2);
     }
@@ -275,7 +271,10 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {loadingHotel || loadingRestaurant ? (
+        {(isNeedFetchHotel &&
+          discoveryConfig[selectedDiscovery].types.includes(1)) ||
+        (isNeedFetchRestaurant &&
+          discoveryConfig[selectedDiscovery].types.includes(2)) ? (
           <Loading />
         ) : !isLogin || filteredBookings.length === 0 ? (
           <View style={styles.emptyState}>

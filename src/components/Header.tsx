@@ -62,7 +62,6 @@ export const Header: React.FC<HeaderProps> = ({ navigation }) => {
           style={[styles.iconButton, { flexDirection: 'row' }]}
           onPress={() => {
             i18n.changeLanguage(i18n.language === 'en' ? 'vi' : 'en');
-            console.log(i18n.language);
           }}
         >
           <Image source={flagSource} style={styles.iconImage} />

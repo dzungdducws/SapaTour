@@ -8,8 +8,6 @@ type CardImageLocationListProps = {
 };
 
 const CardImageLocationList = ({ locations }: CardImageLocationListProps) => {
-  console.log('re render list');
-
   return (
     <FlatList
       data={locations}

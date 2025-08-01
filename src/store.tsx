@@ -9,12 +9,24 @@ import restaurantBookingSlice from './slice/restaurantBookingSlice';
 import detailInfoHotelBookingSlice from './slice/detailInfoHotelBooking';
 import detailInfoRestaurantBookingSlice from './slice/detailInfoRestaurantBooking';
 import statusSlice from './slice/statusSlice';
+// import createSagaMiddleware from 'redux-saga';
+import { rootSaga } from './services_saga/rootSaga';
+import { sagaMonitor } from './devtools/ReactotronConfig';
 
 let enhancers: any[] = [];
+const createSagaMiddleware = require('redux-saga').default;
+let sagaMiddleware: any;
+let middleware: any[] = [];
 
 if (__DEV__) {
   const reactotron = require('./devtools/ReactotronConfig').default;
   enhancers.push(reactotron.createEnhancer());
+
+  sagaMiddleware = createSagaMiddleware({ sagaMonitor });
+  middleware.push(sagaMiddleware);
+} else {
+  sagaMiddleware = createSagaMiddleware();
+  middleware.push(sagaMiddleware);
 }
 
 export const store = configureStore({
@@ -30,9 +42,11 @@ export const store = configureStore({
     detailInfoHotelBooking: detailInfoHotelBookingSlice,
     detailInfoRestaurantBooking: detailInfoRestaurantBookingSlice,
   },
-  // middleware: getDefaultMiddleware => getDefaultMiddleware(),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(middleware),
   enhancers: getDefaultEnhancers => getDefaultEnhancers().concat(enhancers),
 });
+
+sagaMiddleware.run(rootSaga);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

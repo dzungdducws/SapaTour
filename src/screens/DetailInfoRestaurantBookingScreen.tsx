@@ -10,7 +10,7 @@ import {
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import LinearGradient from 'react-native-linear-gradient';
-import { InformationPayModal } from '../components/InformationPayModal';
+import { InformationPayModal } from '../components/modal/InformationPayModal';
 import { formatVNDate } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserState } from '../slice/userSlice';

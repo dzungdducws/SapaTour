@@ -18,16 +18,18 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../slice/userSlice';
 
 import { RootStackParamList } from '../../types';
-import { API_URL } from '../../const/const';
 import { AppDispatch } from '../../store';
 
 import { useTranslation } from 'react-i18next';
 import i18n from '../../i18n';
+import container from '../../dependencies/dependencies';
+import { AuthService } from '../../services/AuthService';
+import { AuthModal } from '../../components/modal/AuthModal';
+import { screenWidth } from '../../utils/size';
 
 type LoginScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 };
-const { width: screenWidth } = Dimensions.get('window');
 
 const imageSource_1 = require('../../../assets/img/bg/bg_dangnhap_1.png');
 const flagSource = require('../../../assets/img/icon/icon-vietnam-flag.png');
@@ -39,13 +41,16 @@ const iconEyeOff = require('../../../assets/img/icon/icon-eye-off.png');
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
 
+  const authService = container.get<AuthService>('AuthService');
+
   const [imageHeight, setImageHeight] = useState(200);
   const [showPassword, setShowPassword] = useState(true);
   const [emailOrPhoneNumber, setEmailOrPhoneNumber] =
     useState('user@gmail.com');
   const [password, setPassword] = useState('12345678');
   const dispatch = useDispatch<AppDispatch>();
-
+  const [visible, setVisible] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(0);
   const fadeAnim = useAnimatedValue(0);
 
   useEffect(() => {
@@ -57,45 +62,30 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   }, [fadeAnim]);
 
   const loginUser = async () => {
-    await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        emailOrPhoneNumber,
-        password,
-      }),
-    })
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === 200) {
-          dispatch(
-            login({
-              isLogin: true,
-              userInfo: {
-                id: res.data.user.id,
-                name: res.data.user.name,
-                email: res.data.user.email,
-                avt: res.data.user.avt,
-                country: res.data.user.country,
-                address: res.data.user.address,
-                phone: res.data.user.phone,
-                role: res.data.user.role,
-                birthday: res.data.user.birthday,
-                token: res.data.token,
-              },
-            }),
-          );
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Home' }],
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    setVisible(true);
+    const data = await authService.login(emailOrPhoneNumber, password);
+    setTimeout(() => {
+      if (data.status === 200) {
+        dispatch(
+          login({
+            isLogin: true,
+            userInfo: data.userInfo,
+          }),
+        );
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
+      }
+
+      setVisible(false);
+      setIsCorrect(0);
+    }, 2000);
+    if (data.status === 200) {
+      setIsCorrect(1);
+    } else {
+      setIsCorrect(2);
+    }
   };
 
   useEffect(() => {
@@ -336,6 +326,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         }}
         resizeMode="contain"
       />
+      <AuthModal visible={visible} isTrue={isCorrect}></AuthModal>
     </View>
   );
 };

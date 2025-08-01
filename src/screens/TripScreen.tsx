@@ -12,9 +12,9 @@ import { FooterMenu } from '../components/FooterMenu';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { Header } from '../components/Header';
-import { RangePickerModal } from '../components/RangePickerModal';
+import { RangePickerModal } from '../components/modal/RangePickerModal';
 import LinearGradient from 'react-native-linear-gradient';
-import { InformationPayModal } from '../components/InformationPayModal';
+import { InformationPayModal } from '../components/modal/InformationPayModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { BookingHotelInList } from '../components/BookingHotelInList';
 import { UserState, logoutThunk } from '../slice/userSlice';
@@ -36,12 +36,20 @@ import { formatVNDate } from '../utils/utils';
 import { setIndex, setStatusToIndex } from '../slice/statusSlice';
 import { Loading } from '../components/Loading';
 import { AppDispatch } from '../store';
+import container from '../dependencies/dependencies';
+import { RestaurantService } from '../services/RestaurantService';
+import { HotelService } from '../services/HotelService';
+import { discoveryConfig, statusConfig, recommendations } from '../dataraw';
 
 type TripScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Trip'>;
 };
 
 const TripScreen = ({ navigation }: TripScreenProps) => {
+  const restaurantService =
+    container.get<RestaurantService>('RestaurantService');
+  const hotelService = container.get<HotelService>('HotelService');
+
   useEffect(() => {
     const start = performance.now();
     return () => {
@@ -51,7 +59,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     };
   }, []);
 
-  const dispatch = useDispatch<AppDispatch>();;
+  const dispatch = useDispatch<AppDispatch>();
   const { isLogin, userInfo } = useSelector(
     (state: { user: UserState }) => state.user,
   );
@@ -78,81 +86,16 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
   const [loadingHotel, setLoadingHotel] = useState(false);
   const [loadingRestaurant, setLoadingRestaurant] = useState(false);
 
-  // Status configuration
-  const statusConfig = [
-    { id: 0, title: 'Sắp tới', statuses: [1, 2, 3, 4] },
-    { id: 1, title: 'Hoàn tất', statuses: [5] },
-    { id: 2, title: 'Đã hủy', statuses: [6] },
-  ];
-
-  // Discovery location configuration
-  const discoveryConfig = [
-    { id: 0, title: 'Tất cả', icon: null, types: [1, 2] },
-    {
-      id: 1,
-      title: 'Địa điểm lưu trú',
-      icon: require('../../assets/img/icon/bulk0.png'),
-      types: [1],
-    },
-    {
-      id: 2,
-      title: 'Địa điểm ẩm thực',
-      icon: require('../../assets/img/icon/bulk.png'),
-      types: [2],
-    },
-  ];
-
-  // Recommendation questions
-  const recommendations = [
-    {
-      text: 'Bạn cần tìm địa điểm du lịch?',
-      icon: require('../../assets/img/icon/Map-Point.png'),
-      colorBg: '#EEF4FA',
-    },
-    {
-      text: 'Bạn cần tìm địa điểm lưu trú?',
-      icon: require('../../assets/img/icon/buildings-2.png'),
-      colorBg: '#EBF6EA',
-    },
-    {
-      text: 'Bạn cần tìm địa điểm ẩm thực?',
-      icon: require('../../assets/img/icon/Building.png'),
-      colorBg: '#FBEEEE',
-    },
-  ];
-
   const fetchHotelBooking = async () => {
-    await fetch(`${API_URL}/booking/getBookingHotel/${userInfo.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(res => {
-        dispatch(setHotelBookings(res.data));
-        setLoadingHotel(false);
-      })
-      .catch(err => {
-        console.error('Error fetching bookings:', err);
-      });
+    const data = await hotelService.getHotelBooking(userInfo.id);
+    dispatch(setHotelBookings(data.data));
+    setLoadingHotel(false);
   };
 
   const fetchRestaurantBooking = async () => {
-    await fetch(`${API_URL}/booking/getBookingRestaurant/${userInfo.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(res => {
-        dispatch(setRestaurantBookings(res.data));
-        setLoadingRestaurant(false);
-      })
-      .catch(err => {
-        console.error('Error fetching bookings:', err);
-      });
+    const data = await restaurantService.getRestaurantBooking(userInfo.id);
+    dispatch(setRestaurantBookings(data.data));
+    setLoadingRestaurant(false);
   };
 
   const fetchStatus = async (type: number) => {
@@ -170,7 +113,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
   };
 
   useEffect(() => {
-
     if (
       isNeedFetchHotel &&
       isLogin &&
@@ -189,6 +131,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       fetchRestaurantBooking();
       fetchStatus(2);
     }
+    setRefreshing(false);
   }, [
     isNeedFetchHotel,
     isNeedFetchRestaurant,
@@ -200,9 +143,6 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
     setRefreshing(true);
     dispatch(clearHotelBookings());
     dispatch(clearRestaurantBookings());
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
   }, []);
 
   const filteredBookings = [...hotel_bookings, ...restaurant_bookings]
@@ -222,7 +162,7 @@ const TripScreen = ({ navigation }: TripScreenProps) => {
       return statusMatch && typeMatch;
     });
   const handleLogout = () => {
-    dispatch(logoutThunk());;
+    dispatch(logoutThunk());
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],

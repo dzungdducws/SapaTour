@@ -4,7 +4,7 @@ import { FooterMenu } from '../components/FooterMenu';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { Header } from '../components/Header';
-import { InformationPayModal } from '../components/InformationPayModal';
+import { InformationPayModal } from '../components/modal/InformationPayModal';
 
 type MapScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Map'>;

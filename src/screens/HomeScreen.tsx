@@ -44,12 +44,12 @@ import CardImageListV2 from '../components/CardImageListV2';
 import CardImageLocationListV2 from '../components/CardImageLocationListV2';
 import { AppDispatch } from '../store';
 import { logoutThunk } from '../slice/userSlice';
+import { screenWidth } from '../utils/size';
 
 type HomeScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
-const { width: screenWidth } = Dimensions.get('window');
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   useEffect(() => {

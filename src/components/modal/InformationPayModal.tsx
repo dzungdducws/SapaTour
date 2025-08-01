@@ -90,7 +90,7 @@ export const InformationPayModal: React.FC<Props> = ({
                   {canCopy && (
                     <TouchableOpacity onPress={() => {}}>
                       <Image
-                        source={require('../../assets/img/icon/copy.png')}
+                        source={require('../../../assets/img/icon/copy.png')}
                         style={{ height: 20, width: 20, marginLeft: 4 }}
                       />
                     </TouchableOpacity>
@@ -114,7 +114,7 @@ export const InformationPayModal: React.FC<Props> = ({
 
             <View style={{ alignItems: 'center', marginLeft: 12 }}>
               <Image
-                source={require('../../assets/img/qr.png')}
+                source={require('../../../assets/img/qr.png')}
                 style={{
                   height: 80,
                   width: 80,
@@ -123,7 +123,7 @@ export const InformationPayModal: React.FC<Props> = ({
               />
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image
-                  source={require('../../assets/img/icon/download.png')}
+                  source={require('../../../assets/img/icon/download.png')}
                   style={{ height: 16, width: 16, marginRight: 4 }}
                 />
                 <Text

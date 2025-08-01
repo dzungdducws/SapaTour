@@ -19,7 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types';
 import { useTranslation } from 'react-i18next';
-const { width: screenWidth } = Dimensions.get('window');
+import { screenWidth } from '../../utils/size';
 
 type RegisterScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
